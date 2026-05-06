@@ -129,21 +129,28 @@ function saveCarrier(e) {
         DB.addCarrier(data);
 
         // Create admin user
-        const adminEmail = document.getElementById('car-admin-email').value;
-        const adminName = document.getElementById('car-admin-name').value;
+        const adminEmail = document.getElementById('car-admin-email').value.trim().toLowerCase();
+        const adminName = document.getElementById('car-admin-name').value.trim();
         const adminPass = document.getElementById('car-admin-pass').value || 'admin123';
-        if (adminEmail && !DB.findUserByEmail(adminEmail)) {
-            DB.addUser({
-                id: 'adm_' + Date.now(),
-                name: adminName,
-                email: adminEmail,
-                password: adminPass,
-                role: 'admin',
-                carrierId: data.id,
-                createdAt: new Date().toISOString()
-            });
+        
+        if (adminEmail) {
+            if (DB.findUserByEmail(adminEmail)) {
+                showToast('Atenção: Transportadora criada, mas o E-mail do Admin já existe no sistema!', 'error');
+            } else {
+                DB.addUser({
+                    id: 'adm_' + Date.now(),
+                    name: adminName,
+                    email: adminEmail,
+                    password: adminPass,
+                    role: 'admin',
+                    carrierId: data.id,
+                    createdAt: new Date().toISOString()
+                });
+                showToast('Transportadora e Admin criados com sucesso!');
+            }
+        } else {
+            showToast('Transportadora criada!');
         }
-        showToast('Transportadora e admin criados!');
     }
 
     document.getElementById('carrier-modal').classList.remove('active');
