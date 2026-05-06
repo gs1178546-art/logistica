@@ -26,8 +26,9 @@ const DB = {
         
         // Setup initial push if empty
         window.dbFirestore.collection('database').doc('main').get().then(doc => {
-            if (!doc.exists || Object.keys(doc.data() || {}).length === 0) {
-                console.log("[DB] Firestore vazio, subindo dados iniciais locais...");
+            const docData = doc.exists ? doc.data() : {};
+            if (!doc.exists || !docData.logistica_users || docData.logistica_users.length <= 2) {
+                console.log("[DB] Firestore vazio ou incompleto, subindo dados iniciais locais...");
                 this._seedDemoData();
                 this._migrateRoles();
                 
