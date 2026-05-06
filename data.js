@@ -303,3 +303,30 @@ window.maskPhone = function(input) {
     v = v.replace(/(\d)(\d{4})$/, "$1-$2");
     input.value = v;
 };
+
+// Efeito Global de Transição de Página
+document.addEventListener('DOMContentLoaded', () => {
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s ease';
+    document.body.style.transform = 'translateY(15px) scale(0.99)';
+    document.body.style.filter = 'blur(4px)';
+    
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            document.body.style.opacity = '1';
+            document.body.style.transform = 'translateY(0) scale(1)';
+            document.body.style.filter = 'blur(0)';
+        }, 50);
+    });
+});
+
+document.addEventListener('click', e => {
+    const link = e.target.closest('a');
+    if (link && link.href && !link.href.includes('#') && !link.hasAttribute('data-tab') && !link.hasAttribute('target') && link.host === window.location.host) {
+        e.preventDefault();
+        document.body.style.opacity = '0';
+        document.body.style.transform = 'translateY(-15px) scale(0.99)';
+        document.body.style.filter = 'blur(4px)';
+        setTimeout(() => { window.location = link.href; }, 400);
+    }
+});
