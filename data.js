@@ -12,8 +12,56 @@ const DB = {
             this._seedDemoData();
             this._migrateRoles();
         } else {
-            console.log('[DB] Conectado ao Firebase.');
+            console.log('[DB] Firebase configurado. Aguardando inicialização do SDK...');
+            if (window.dbFirestore) {
+                this._setupFirebaseSync();
+            } else {
+                window.addEventListener('firebaseReady', () => this._setupFirebaseSync());
+            }
         }
+    },
+
+    _setupFirebaseSync() {
+        console.log('[DB] Iniciando sincronização com Firestore...');
+        
+        // Setup initial push if empty
+        window.dbFirestore.collection('database').doc('main').get().then(doc => {
+            if (!doc.exists || Object.keys(doc.data() || {}).length === 0) {
+                console.log("[DB] Firestore vazio, subindo dados iniciais locais...");
+                this._seedDemoData();
+                this._migrateRoles();
+                
+                const keys = ['logistica_users', 'logistica_carriers', 'logistica_deliveries', 'logistica_vehicles', 'logistica_notifications'];
+                const payload = {};
+                keys.forEach(k => { payload[k] = localStorage.getItem(k) || '[]'; });
+                window.dbFirestore.collection('database').doc('main').set(payload);
+            }
+        });
+
+        // Listen for remote changes
+        window.dbFirestore.collection('database').doc('main').onSnapshot((doc) => {
+            if (doc.exists) {
+                const data = doc.data();
+                let changed = false;
+                
+                Object.keys(data).forEach(key => {
+                    if (localStorage.getItem(key) !== data[key]) {
+                        localStorage.setItem(key, data[key]);
+                        changed = true;
+                    }
+                });
+                
+                if (changed) {
+                    console.log("[DB] Dados sincronizados da nuvem.");
+                    // Atualiza a tela (dependendo de qual tela o usuário está)
+                    if (typeof refreshDashboard === 'function') refreshDashboard();
+                    if (typeof renderDeliveries === 'function') renderDeliveries();
+                    if (typeof renderVehicles === 'function') renderVehicles();
+                    if (typeof renderDrivers === 'function') renderDrivers();
+                    if (typeof renderMyDeliveries === 'function') renderMyDeliveries();
+                }
+            }
+        });
     },
 
     _migrateRoles() {
@@ -53,7 +101,15 @@ const DB = {
         try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch { return []; }
     },
     _set(key, data) {
-        localStorage.setItem(key, JSON.stringify(data));
+        const strData = JSON.stringify(data);
+        localStorage.setItem(key, strData);
+        
+        // Push para Firebase
+        if (this._useFirebase && window.dbFirestore) {
+            window.dbFirestore.collection('database').doc('main').set({
+                [key]: strData
+            }, { merge: true }).catch(err => console.error("Firebase sync error:", err));
+        }
     },
     _getObj(key) {
         try { return JSON.parse(localStorage.getItem(key) || '{}'); } catch { return {}; }
