@@ -63,10 +63,10 @@ const DB = {
     getUsers() { return this._get('logistica_users'); },
     saveUsers(users) { this._set('logistica_users', users); },
     findUser(email, password) {
-        return this.getUsers().find(u => u.email === email && u.password === password);
+        return this.getUsers().find(u => u.email && u.email.trim().toLowerCase() === email.trim().toLowerCase() && u.password === password);
     },
     findUserByEmail(email) {
-        return this.getUsers().find(u => u.email === email);
+        return this.getUsers().find(u => u.email && u.email.trim().toLowerCase() === email.trim().toLowerCase());
     },
     addUser(user) {
         const users = this.getUsers();

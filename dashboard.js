@@ -291,8 +291,8 @@ function saveDriver(e) {
     const data = {
         id: 'drv_' + Date.now(),
         carrierId: CID,
-        name: document.getElementById('drv-name').value,
-        email: document.getElementById('drv-email').value,
+        name: document.getElementById('drv-name').value.trim(),
+        email: document.getElementById('drv-email').value.trim().toLowerCase(),
         password: document.getElementById('drv-pass').value
     };
     DB.addDriver(data);
