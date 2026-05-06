@@ -49,15 +49,6 @@
                 </button>
             </form>
 
-            <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);">
-                <p style="text-align:center;font-size:0.8rem;color:var(--text-dim);margin-bottom:1rem;">Contas de demonstração:</p>
-                <div style="display:grid;gap:0.5rem;font-size:0.78rem;">
-                    <div class="glass" style="padding:0.6rem 0.8rem;cursor:pointer;transition:var(--transition);" onclick="fillDemo('gs1178546@gmail.com','Menino0503')" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor=''">
-                        <strong style="color:var(--accent);">Guilherme</strong><br>
-                        <span style="color:var(--text-dim);">gs1178546@gmail.com / Menino0503</span>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -77,11 +68,6 @@
         function togglePass() {
             const inp = document.getElementById('login-password');
             inp.type = inp.type === 'password' ? 'text' : 'password';
-        }
-
-        function fillDemo(email, pass) {
-            document.getElementById('login-email').value = email;
-            document.getElementById('login-password').value = pass;
         }
 
         function showError(msg) {
