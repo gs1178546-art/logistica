@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel | LogiTrack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <i data-lucide="truck"></i>
+                <span>Logi<span class="logo-accent">Track</span>
+                    <small style="font-size:0.4em;opacity:0.5;margin-left:6px;letter-spacing:2px;">PAINEL</small>
+                </span>
+            </div>
+            <div class="nav-actions">
+                <span id="nav-greeting" style="font-size:0.9rem;color:var(--text-dim);"></span>
+                <div class="notif-wrapper">
+                    <button class="btn-icon notif-btn" onclick="toggleNotifications()">
+                        <i data-lucide="bell" style="width:20px;height:20px;"></i>
+                        <span class="notif-badge" id="notif-count" style="display:none;">0</span>
+                    </button>
+                    <div class="notif-dropdown glass" id="notif-dropdown">
+                        <div class="flex-between mb-2">
+                            <strong style="font-size:0.9rem;">Notificações</strong>
+                            <button class="btn-sm btn-secondary" onclick="markAllRead()">Marcar lidas</button>
+                        </div>
+                        <div id="notif-list"><p class="empty-state" style="padding:1rem;">Sem notificações.</p></div>
+                    </div>
+                </div>
+                <button class="btn-danger btn-sm" onclick="DB.logout()">
+                    <i data-lucide="log-out" style="width:16px;height:16px;"></i> Sair
+                </button>
+                <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <div class="drawer-overlay" id="drawer-overlay" onclick="toggleMobileMenu()"></div>
+    <div class="mobile-drawer" id="mobile-drawer">
+        <a href="#" onclick="navTo('dashboard')"><i data-lucide="layout-dashboard" style="width:18px;height:18px;"></i> Dashboard</a>
+        <a href="#" onclick="navTo('deliveries')"><i data-lucide="package" style="width:18px;height:18px;"></i> Entregas</a>
+        <a href="#" onclick="navTo('drivers')"><i data-lucide="users" style="width:18px;height:18px;"></i> Motoristas</a>
+        <a href="#" onclick="navTo('vehicles')"><i data-lucide="car" style="width:18px;height:18px;"></i> Veículos</a>
+        <a href="#" onclick="navTo('calculator')"><i data-lucide="calculator" style="width:18px;height:18px;"></i> Calculadora</a>
+        <a href="#" onclick="navTo('reports')"><i data-lucide="bar-chart-3" style="width:18px;height:18px;"></i> Relatórios</a>
+        <a href="#" onclick="navTo('settings')"><i data-lucide="settings" style="width:18px;height:18px;"></i> Configurações</a>
+        <a href="#" onclick="DB.logout()"><i data-lucide="log-out" style="width:18px;height:18px;"></i> Sair</a>
+    </div>
+
+    <main class="container admin-layout">
+        <aside class="sidebar glass">
+            <ul class="side-nav">
+                <li><a href="#" data-tab="dashboard" class="active"><i data-lucide="layout-dashboard"></i> Dashboard</a></li>
+                <li><a href="#" data-tab="deliveries"><i data-lucide="package"></i> Entregas</a></li>
+                <li><a href="#" data-tab="drivers"><i data-lucide="users"></i> Motoristas</a></li>
+                <li><a href="#" data-tab="vehicles"><i data-lucide="car"></i> Veículos</a></li>
+                <li><a href="#" data-tab="calculator"><i data-lucide="calculator"></i> Calculadora</a></li>
+                <li><a href="#" data-tab="reports"><i data-lucide="bar-chart-3"></i> Relatórios</a></li>
+                <li><a href="#" data-tab="settings"><i data-lucide="settings"></i> Configurações</a></li>
+            </ul>
+        </aside>
+
+        <section class="content">
+            <!-- DASHBOARD -->
+            <div id="tab-dashboard" class="tab-content active">
+                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Dashboard</h2>
+                <div class="stats-row">
+                    <div class="stat-card glass"><h4>Total Entregas</h4><div class="value" id="s-total" style="color:var(--primary);">0</div></div>
+                    <div class="stat-card glass"><h4>Em Trânsito</h4><div class="value" id="s-transit" style="color:var(--info);">0</div></div>
+                    <div class="stat-card glass"><h4>Entregues</h4><div class="value" id="s-delivered" style="color:var(--success);">0</div></div>
+                    <div class="stat-card glass"><h4>Pendentes</h4><div class="value" id="s-pending" style="color:var(--warning);">0</div></div>
+                </div>
+                <div class="charts-grid">
+                    <div class="glass"><div class="chart-wrapper"><canvas id="chart-status"></canvas></div></div>
+                    <div class="glass"><div class="chart-wrapper"><canvas id="chart-weekly"></canvas></div></div>
+                </div>
+                <div class="glass" style="padding:1.5rem;">
+                    <h3 style="font-family:var(--font-heading);margin-bottom:1rem;">Mapa de Entregas</h3>
+                    <div class="map-container" id="dashboard-map"></div>
+                </div>
+            </div>
+
+            <!-- ENTREGAS -->
+            <div id="tab-deliveries" class="tab-content">
+                <div class="flex-between mb-3">
+                    <h2 style="font-family:var(--font-heading);">Entregas</h2>
+                    <button class="btn-primary" onclick="openDeliveryModal()"><i data-lucide="plus" style="width:16px;height:16px;"></i> Nova Entrega</button>
+                </div>
+                <div class="toolbar">
+                    <div class="search-box"><i data-lucide="search"></i><input type="text" id="del-search" placeholder="Buscar por cliente, código..." oninput="renderDeliveries()"></div>
+                    <select class="filter-select" id="del-filter" onchange="renderDeliveries()">
+                        <option value="all">Todos</option>
+                        <option value="pending">Pendentes</option>
+                        <option value="in_transit">Em Trânsito</option>
+                        <option value="delivered">Entregues</option>
+                        <option value="cancelled">Cancelados</option>
+                    </select>
+                </div>
+                <div class="glass" style="padding:1.5rem;overflow-x:auto;">
+                    <table class="data-table"><thead><tr><th>Código</th><th>Cliente</th><th>Origem → Destino</th><th>Motorista</th><th>Status</th><th>Ações</th></tr></thead>
+                    <tbody id="deliveries-tbody"><tr><td colspan="6" class="empty-state">Nenhuma entrega.</td></tr></tbody></table>
+                </div>
+            </div>
+
+            <!-- MOTORISTAS -->
+            <div id="tab-drivers" class="tab-content">
+                <div class="flex-between mb-3">
+                    <h2 style="font-family:var(--font-heading);">Motoristas</h2>
+                    <button class="btn-primary" onclick="openDriverModal()"><i data-lucide="plus" style="width:16px;height:16px;"></i> Novo Motorista</button>
+                </div>
+                <div class="glass" style="padding:1.5rem;overflow-x:auto;">
+                    <table class="data-table"><thead><tr><th>Nome</th><th>Email</th><th>Status GPS</th><th>Última Loc.</th><th>Ações</th></tr></thead>
+                    <tbody id="drivers-tbody"><tr><td colspan="5" class="empty-state">Nenhum motorista.</td></tr></tbody></table>
+                </div>
+            </div>
+
+            <!-- VEÍCULOS -->
+            <div id="tab-vehicles" class="tab-content">
+                <div class="flex-between mb-3">
+                    <h2 style="font-family:var(--font-heading);">Veículos</h2>
+                    <button class="btn-primary" onclick="openVehicleModal()"><i data-lucide="plus" style="width:16px;height:16px;"></i> Novo Veículo</button>
+                </div>
+                <div class="glass" style="padding:1.5rem;overflow-x:auto;">
+                    <table class="data-table"><thead><tr><th>Placa</th><th>Tipo</th><th>Modelo</th><th>Ano</th><th>Capacidade</th><th>Status</th><th>Ações</th></tr></thead>
+                    <tbody id="vehicles-tbody"><tr><td colspan="7" class="empty-state">Nenhum veículo.</td></tr></tbody></table>
+                </div>
+            </div>
+
+            <!-- CALCULADORA DE FRETE -->
+            <div id="tab-calculator" class="tab-content">
+                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Calculadora de Frete</h2>
+                <div class="settings-grid">
+                    <div class="setting-card glass">
+                        <h4><i data-lucide="calculator" style="width:18px;height:18px;"></i> Calcular Frete</h4>
+                        <div class="form-group"><label>Distância (km)</label><input type="number" id="calc-distance" placeholder="Ex: 500" min="1"></div>
+                        <div class="form-group"><label>Peso (kg)</label><input type="number" id="calc-weight" placeholder="Ex: 1000" min="1"></div>
+                        <div class="form-group"><label>Tipo de Carga</label>
+                            <select id="calc-type"><option value="normal">Normal</option><option value="fragile">Frágil (+30%)</option><option value="perishable">Perecível (+50%)</option><option value="dangerous">Perigosa (+80%)</option></select>
+                        </div>
+                        <button class="btn-primary full-width" onclick="calcFreight()"><i data-lucide="calculator" style="width:16px;height:16px;"></i> Calcular</button>
+                        <div class="calc-result" id="calc-result" style="display:none;">
+                            <p style="color:var(--text-dim);font-size:0.85rem;">Valor estimado do frete:</p>
+                            <div class="total" id="calc-total">R$ 0,00</div>
+                            <p style="color:var(--text-dim);font-size:0.75rem;margin-top:0.5rem;" id="calc-breakdown"></p>
+                        </div>
+                    </div>
+                    <div class="setting-card glass">
+                        <h4><i data-lucide="info" style="width:18px;height:18px;"></i> Tabela de Referência</h4>
+                        <table class="data-table" style="font-size:0.82rem;">
+                            <thead><tr><th>Faixa (km)</th><th>R$/km</th></tr></thead>
+                            <tbody>
+                                <tr><td>0 - 100</td><td>R$ 3,50</td></tr>
+                                <tr><td>101 - 500</td><td>R$ 2,80</td></tr>
+                                <tr><td>501 - 1000</td><td>R$ 2,20</td></tr>
+                                <tr><td>1001+</td><td>R$ 1,80</td></tr>
+                            </tbody>
+                        </table>
+                        <p style="color:var(--text-dim);font-size:0.75rem;margin-top:1rem;">Taxa por peso: R$ 0,15/kg<br>Pedágio estimado: R$ 0,12/km</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RELATÓRIOS -->
+            <div id="tab-reports" class="tab-content">
+                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Relatórios</h2>
+                <div class="stats-row">
+                    <div class="stat-card glass"><h4>Taxa de Entrega</h4><div class="value" id="r-rate" style="color:var(--success);">0%</div></div>
+                    <div class="stat-card glass"><h4>Valor Total</h4><div class="value" id="r-value" style="color:var(--primary);font-size:1.4rem;">R$ 0</div></div>
+                    <div class="stat-card glass"><h4>Peso Total</h4><div class="value" id="r-weight" style="color:var(--accent);">0 kg</div></div>
+                </div>
+                <div class="charts-grid">
+                    <div class="glass"><div class="chart-wrapper"><canvas id="chart-monthly"></canvas></div></div>
+                    <div class="glass"><div class="chart-wrapper"><canvas id="chart-drivers"></canvas></div></div>
+                </div>
+            </div>
+
+            <!-- CONFIGURAÇÕES -->
+            <div id="tab-settings" class="tab-content">
+                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Configurações</h2>
+                <div class="settings-grid">
+                    <div class="setting-card glass">
+                        <h4><i data-lucide="building" style="width:18px;height:18px;"></i> Dados da Transportadora</h4>
+                        <div class="form-group"><label>Nome</label><input type="text" id="set-name"></div>
+                        <div class="form-group"><label>CNPJ</label><input type="text" id="set-cnpj" maxlength="18" oninput="maskCNPJ(this)" placeholder="00.000.000/0001-00"></div>
+                        <div class="form-group"><label>Telefone</label><input type="tel" id="set-phone" maxlength="15" oninput="maskPhone(this)" placeholder="(00) 00000-0000"></div>
+                        <div class="form-group"><label>Endereço</label><input type="text" id="set-address"></div>
+                        <button class="btn-primary full-width" onclick="saveCarrierSettings()"><i data-lucide="save" style="width:16px;height:16px;"></i> Salvar</button>
+                    </div>
+                    <div class="setting-card glass">
+                        <h4><i data-lucide="lock" style="width:18px;height:18px;"></i> Alterar Senha</h4>
+                        <div class="form-group"><label>Senha Atual</label><input type="password" id="set-curpass"></div>
+                        <div class="form-group"><label>Nova Senha</label><input type="password" id="set-newpass"></div>
+                        <div class="form-group"><label>Confirmar</label><input type="password" id="set-confpass"></div>
+                        <button class="btn-primary full-width" onclick="changePassword()"><i data-lucide="save" style="width:16px;height:16px;"></i> Alterar Senha</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAIS -->
+    <div id="delivery-modal" class="modal-overlay">
+        <div class="modal-content glass">
+            <button class="close-modal" onclick="closeModal('delivery-modal')"><i data-lucide="x"></i></button>
+            <h3 id="del-modal-title">Nova Entrega</h3>
+            <form id="delivery-form" onsubmit="saveDelivery(event)">
+                <input type="hidden" id="del-edit-id">
+                <div class="form-row">
+                    <div class="form-group"><label>Cliente</label><input type="text" id="del-client" required placeholder="Nome do cliente"></div>
+                    <div class="form-group"><label>Telefone</label><input type="tel" id="del-phone" maxlength="15" oninput="maskPhone(this)" placeholder="(00) 00000-0000"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Origem</label><input type="text" id="del-origin" required placeholder="Cidade de origem"></div>
+                    <div class="form-group"><label>Destino</label><input type="text" id="del-dest" required placeholder="Cidade de destino"></div>
+                </div>
+                <div class="form-group"><label>Endereço de Entrega</label><input type="text" id="del-address" placeholder="Rua, número, bairro"></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Peso (kg)</label><input type="number" id="del-weight" step="0.1" min="0" placeholder="0.0"></div>
+                    <div class="form-group"><label>Valor (R$)</label><input type="number" id="del-value" step="0.01" min="0" placeholder="0.00"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Motorista</label><select id="del-driver"><option value="">Selecionar...</option></select></div>
+                    <div class="form-group"><label>Status</label>
+                        <select id="del-status"><option value="pending">Pendente</option><option value="in_transit">Em Trânsito</option><option value="delivered">Entregue</option><option value="cancelled">Cancelado</option></select>
+                    </div>
+                </div>
+                <div class="form-group"><label>Observações</label><textarea id="del-notes" placeholder="Observações..."></textarea></div>
+                <button type="submit" class="btn-primary full-width">Salvar Entrega</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="driver-modal" class="modal-overlay">
+        <div class="modal-content glass">
+            <button class="close-modal" onclick="closeModal('driver-modal')"><i data-lucide="x"></i></button>
+            <h3 id="drv-modal-title">Novo Motorista</h3>
+            <form id="driver-form" onsubmit="saveDriver(event)">
+                <input type="hidden" id="drv-edit-id">
+                <div class="form-group"><label>Nome</label><input type="text" id="drv-name" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Email</label><input type="email" id="drv-email" required></div>
+                    <div class="form-group"><label>Senha</label><input type="text" id="drv-pass" required placeholder="Ex: motorista123"></div>
+                </div>
+                <button type="submit" class="btn-primary full-width">Salvar Motorista</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="vehicle-modal" class="modal-overlay">
+        <div class="modal-content glass">
+            <button class="close-modal" onclick="closeModal('vehicle-modal')"><i data-lucide="x"></i></button>
+            <h3 id="veh-modal-title">Novo Veículo</h3>
+            <form id="vehicle-form" onsubmit="saveVehicle(event)">
+                <input type="hidden" id="veh-edit-id">
+                <div class="form-row">
+                    <div class="form-group"><label>Placa</label><input type="text" id="veh-plate" required placeholder="ABC-1234"></div>
+                    <div class="form-group"><label>Tipo</label>
+                        <select id="veh-type"><option value="Van">Van</option><option value="Caminhão">Caminhão</option><option value="Truck">Truck</option><option value="Carreta">Carreta</option><option value="Moto">Moto</option></select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Modelo</label><input type="text" id="veh-model" required></div>
+                    <div class="form-group"><label>Ano</label><input type="number" id="veh-year" min="2000" max="2030"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Capacidade</label><input type="text" id="veh-cap" placeholder="Ex: 5 ton"></div>
+                    <div class="form-group"><label>Status</label>
+                        <select id="veh-status"><option value="active">Ativo</option><option value="maintenance">Manutenção</option><option value="inactive">Inativo</option></select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary full-width">Salvar Veículo</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast toast-success" id="toast"><i data-lucide="check-circle" style="width:20px;height:20px;"></i><span id="toast-text">Salvo!</span></div>
+
+    <script src="firebase-config.js"></script>
+    <script src="data.js"></script>
+    <script src="dashboard.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

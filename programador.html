@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programador | LogiTrack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body>
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <i data-lucide="shield-check"></i>
+                <span>Logi<span class="logo-accent">Track</span>
+                    <small style="font-size:0.4em;opacity:0.5;margin-left:6px;letter-spacing:2px;">PROGRAMADOR</small>
+                </span>
+            </div>
+            <div class="nav-actions">
+                <button class="btn-danger btn-sm" onclick="DB.logout()"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Sair</button>
+                <button class="hamburger" id="hamburger-btn" onclick="document.getElementById('mobile-drawer').classList.toggle('open');document.getElementById('drawer-overlay').classList.toggle('open');this.classList.toggle('active');lucide.createIcons();">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="drawer-overlay" id="drawer-overlay" onclick="document.getElementById('mobile-drawer').classList.remove('open');document.getElementById('drawer-overlay').classList.remove('open');document.getElementById('hamburger-btn').classList.remove('active');"></div>
+    <div class="mobile-drawer" id="mobile-drawer">
+        <a href="#" onclick="saNavTo('overview')"><i data-lucide="layout-dashboard" style="width:18px;height:18px;"></i> Visão Geral</a>
+        <a href="#" onclick="saNavTo('carriers')"><i data-lucide="building" style="width:18px;height:18px;"></i> Transportadoras</a>
+        <a href="#" onclick="saNavTo('users')"><i data-lucide="users" style="width:18px;height:18px;"></i> Usuários</a>
+        <a href="#" onclick="DB.logout()"><i data-lucide="log-out" style="width:18px;height:18px;"></i> Sair</a>
+    </div>
+
+    <main class="container admin-layout">
+        <aside class="sidebar glass">
+            <ul class="side-nav">
+                <li><a href="#" data-tab="overview" class="active"><i data-lucide="layout-dashboard"></i> Visão Geral</a></li>
+                <li><a href="#" data-tab="carriers"><i data-lucide="building"></i> Transportadoras</a></li>
+                <li><a href="#" data-tab="users"><i data-lucide="users"></i> Usuários</a></li>
+            </ul>
+        </aside>
+
+        <section class="content">
+            <!-- OVERVIEW -->
+            <div id="tab-overview" class="tab-content active">
+                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Visão Geral do Sistema</h2>
+                <div class="stats-row">
+                    <div class="stat-card glass"><h4>Transportadoras</h4><div class="value" id="sa-carriers" style="color:var(--primary);">0</div></div>
+                    <div class="stat-card glass"><h4>Total Entregas</h4><div class="value" id="sa-deliveries" style="color:var(--info);">0</div></div>
+                    <div class="stat-card glass"><h4>Veículos</h4><div class="value" id="sa-vehicles" style="color:var(--success);">0</div></div>
+                </div>
+                <div class="charts-grid">
+                    <div class="glass"><div class="chart-wrapper"><canvas id="sa-chart-carriers"></canvas></div></div>
+                    <div class="glass"><div class="chart-wrapper"><canvas id="sa-chart-status"></canvas></div></div>
+                </div>
+            </div>
+
+            <!-- TRANSPORTADORAS -->
+            <div id="tab-carriers" class="tab-content">
+                <div class="flex-between mb-3">
+                    <h2 style="font-family:var(--font-heading);">Transportadoras</h2>
+                    <button class="btn-primary" onclick="openCarrierModal()"><i data-lucide="plus" style="width:16px;height:16px;"></i> Nova Transportadora</button>
+                </div>
+                <div class="glass" style="padding:1.5rem;overflow-x:auto;">
+                    <table class="data-table"><thead><tr><th>Nome</th><th>CNPJ</th><th>Contato</th><th>Entregas</th><th>Status</th><th>Ações</th></tr></thead>
+                    <tbody id="carriers-tbody"></tbody></table>
+                </div>
+            </div>
+
+            <!-- USUÁRIOS -->
+            <div id="tab-users" class="tab-content">
+                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Todos os Usuários</h2>
+                <div class="glass" style="padding:1.5rem;overflow-x:auto;">
+                    <table class="data-table"><thead><tr><th>Nome</th><th>Email</th><th>Papel</th><th>Transportadora</th><th>Criado em</th></tr></thead>
+                    <tbody id="users-tbody"></tbody></table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Carrier Modal -->
+    <div id="carrier-modal" class="modal-overlay">
+        <div class="modal-content glass">
+            <button class="close-modal" onclick="document.getElementById('carrier-modal').classList.remove('active')"><i data-lucide="x"></i></button>
+            <h3 id="carrier-modal-title">Nova Transportadora</h3>
+            <form id="carrier-form" onsubmit="saveCarrier(event)">
+                <input type="hidden" id="car-edit-id">
+                <div class="form-group"><label>Nome</label><input type="text" id="car-name" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label>CNPJ</label><input type="text" id="car-cnpj" maxlength="18" oninput="maskCNPJ(this)" placeholder="00.000.000/0001-00"></div>
+                    <div class="form-group"><label>Telefone</label><input type="tel" id="car-phone" maxlength="15" oninput="maskPhone(this)" placeholder="(00) 00000-0000"></div>
+                </div>
+                <div class="form-group"><label>Endereço</label><input type="text" id="car-address"></div>
+                <div class="form-group"><label>Email</label><input type="email" id="car-email"></div>
+                <hr style="border-color:var(--border);margin:1.5rem 0;">
+                <h4 style="margin-bottom:1rem;">Conta Admin da Transportadora</h4>
+                <div class="form-row">
+                    <div class="form-group"><label>Nome do Admin</label><input type="text" id="car-admin-name" required></div>
+                    <div class="form-group"><label>Email do Admin</label><input type="email" id="car-admin-email" required></div>
+                </div>
+                <div class="form-group"><label>Senha do Admin</label><input type="text" id="car-admin-pass" value="admin123"></div>
+                <button type="submit" class="btn-primary full-width">Salvar Transportadora</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast toast-success" id="toast"><i data-lucide="check-circle" style="width:20px;height:20px;"></i><span id="toast-text">Salvo!</span></div>
+
+    <script src="firebase-config.js"></script>
+    <script src="data.js"></script>
+    <script src="programador.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

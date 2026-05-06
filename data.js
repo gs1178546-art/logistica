@@ -1,0 +1,305 @@
+// =============================================
+// LogiTrack - Data Layer (Firebase + localStorage fallback)
+// =============================================
+
+const DB = {
+    _useFirebase: false,
+
+    init() {
+        this._useFirebase = typeof isFirebaseConfigured === 'function' && isFirebaseConfigured();
+        if (!this._useFirebase) {
+            console.log('[DB] Modo demo (localStorage). Configure Firebase para persistência real.');
+            this._seedDemoData();
+            this._migrateRoles();
+        } else {
+            console.log('[DB] Conectado ao Firebase.');
+        }
+    },
+
+    _migrateRoles() {
+        const users = this.getUsers();
+        let changed = false;
+        
+        // Update programador credentials
+        users.forEach(u => {
+            if (u.role === 'superadmin' || u.role === 'programador') {
+                u.role = 'programador';
+                u.name = 'Guilherme';
+                u.email = 'gs1178546@gmail.com';
+                u.password = 'Menino0503';
+                changed = true;
+            }
+        });
+
+        if (changed) {
+            this.saveUsers(users);
+        }
+
+        // Update current session if logged in
+        const curUser = this.getCurrentUser();
+        if (curUser && (curUser.role === 'superadmin' || curUser.role === 'programador')) {
+            curUser.role = 'programador';
+            curUser.name = 'Guilherme';
+            curUser.email = 'gs1178546@gmail.com';
+            this.setCurrentUser(curUser);
+        }
+
+        // Clean up drivers data
+        localStorage.removeItem('logistica_drivers');
+    },
+
+    // ── Generic CRUD ──────────────────────────────
+    _get(key) {
+        try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch { return []; }
+    },
+    _set(key, data) {
+        localStorage.setItem(key, JSON.stringify(data));
+    },
+    _getObj(key) {
+        try { return JSON.parse(localStorage.getItem(key) || '{}'); } catch { return {}; }
+    },
+
+    // ── USERS ─────────────────────────────────────
+    getUsers() { return this._get('logistica_users'); },
+    saveUsers(users) { this._set('logistica_users', users); },
+    findUser(email, password) {
+        return this.getUsers().find(u => u.email === email && u.password === password);
+    },
+    findUserByEmail(email) {
+        return this.getUsers().find(u => u.email === email);
+    },
+    addUser(user) {
+        const users = this.getUsers();
+        users.push(user);
+        this.saveUsers(users);
+        return user;
+    },
+    updateUser(id, updates) {
+        const users = this.getUsers();
+        const idx = users.findIndex(u => u.id === id);
+        if (idx >= 0) { Object.assign(users[idx], updates); this.saveUsers(users); }
+        return users[idx];
+    },
+
+    // ── SESSION ───────────────────────────────────
+    setCurrentUser(user) {
+        localStorage.setItem('logistica_currentUser', JSON.stringify(user));
+    },
+    getCurrentUser() {
+        try { return JSON.parse(localStorage.getItem('logistica_currentUser') || 'null'); } catch { return null; }
+    },
+    logout() {
+        localStorage.removeItem('logistica_currentUser');
+        window.location.href = 'login.html';
+    },
+
+    // ── CARRIERS (Transportadoras) ────────────────
+    getCarriers() { return this._get('logistica_carriers'); },
+    saveCarriers(c) { this._set('logistica_carriers', c); },
+    getCarrier(id) { return this.getCarriers().find(c => c.id === id); },
+    addCarrier(carrier) {
+        const list = this.getCarriers();
+        list.push(carrier);
+        this.saveCarriers(list);
+        return carrier;
+    },
+    updateCarrier(id, updates) {
+        const list = this.getCarriers();
+        const idx = list.findIndex(c => c.id === id);
+        if (idx >= 0) { Object.assign(list[idx], updates); this.saveCarriers(list); }
+        return list[idx];
+    },
+    deleteCarrier(id) {
+        this.saveCarriers(this.getCarriers().filter(c => c.id !== id));
+    },
+
+    // ── DRIVERS (Motoristas) ──────────────────────
+    getDrivers(carrierId) {
+        const all = this._get('logistica_users').filter(u => u.role === 'driver');
+        if (!carrierId) return all;
+        return all.filter(d => d.carrierId === carrierId);
+    },
+    addDriver(driver) {
+        const users = this.getUsers();
+        driver.role = 'driver';
+        driver.createdAt = new Date().toISOString();
+        users.push(driver);
+        this.saveUsers(users);
+        return driver;
+    },
+    updateDriver(id, updates) {
+        const users = this.getUsers();
+        const idx = users.findIndex(u => u.id === id && u.role === 'driver');
+        if (idx >= 0) { Object.assign(users[idx], updates); this.saveUsers(users); }
+        return users[idx];
+    },
+    deleteDriver(id) {
+        this.saveUsers(this.getUsers().filter(u => u.id !== id));
+    },
+
+    // ── DELIVERIES (Entregas) ─────────────────────
+    getAllDeliveries() { return this._get('logistica_deliveries'); },
+    getDeliveries(carrierId) {
+        const all = this.getAllDeliveries();
+        if (!carrierId) return all;
+        return all.filter(d => d.carrierId === carrierId);
+    },
+    getDelivery(id) { return this.getAllDeliveries().find(d => d.id === id); },
+    addDelivery(delivery) {
+        const list = this.getAllDeliveries();
+        list.push(delivery);
+        this._set('logistica_deliveries', list);
+        return delivery;
+    },
+    updateDelivery(id, updates) {
+        const list = this.getAllDeliveries();
+        const idx = list.findIndex(d => d.id === id);
+        if (idx >= 0) { Object.assign(list[idx], updates); this._set('logistica_deliveries', list); }
+        return list[idx];
+    },
+    deleteDelivery(id) {
+        this._set('logistica_deliveries', this.getAllDeliveries().filter(d => d.id !== id));
+    },
+
+    // ── VEHICLES (Veículos) ───────────────────────
+    getAllVehicles() { return this._get('logistica_vehicles'); },
+    getVehicles(carrierId) {
+        const all = this.getAllVehicles();
+        if (!carrierId) return all;
+        return all.filter(v => v.carrierId === carrierId);
+    },
+    addVehicle(vehicle) {
+        const list = this.getAllVehicles();
+        list.push(vehicle);
+        this._set('logistica_vehicles', list);
+        return vehicle;
+    },
+    updateVehicle(id, updates) {
+        const list = this.getAllVehicles();
+        const idx = list.findIndex(v => v.id === id);
+        if (idx >= 0) { Object.assign(list[idx], updates); this._set('logistica_vehicles', list); }
+        return list[idx];
+    },
+    deleteVehicle(id) {
+        this._set('logistica_vehicles', this.getAllVehicles().filter(v => v.id !== id));
+    },
+
+    // ── NOTIFICATIONS ─────────────────────────────
+    getNotifications(userId) {
+        return this._get('logistica_notifications').filter(n => n.userId === userId);
+    },
+    addNotification(notif) {
+        const list = this._get('logistica_notifications');
+        list.push({ id: Date.now(), read: false, createdAt: new Date().toISOString(), ...notif });
+        this._set('logistica_notifications', list);
+    },
+    markNotificationRead(id) {
+        const list = this._get('logistica_notifications');
+        const n = list.find(x => x.id === id);
+        if (n) { n.read = true; this._set('logistica_notifications', list); }
+    },
+    markAllNotificationsRead(userId) {
+        const list = this._get('logistica_notifications');
+        list.forEach(n => { if (n.userId === userId) n.read = true; });
+        this._set('logistica_notifications', list);
+    },
+
+    // ── MESSAGES (Chat) ───────────────────────────
+    getMessages(carrierId) {
+        return this._get('logistica_messages').filter(m => m.carrierId === carrierId);
+    },
+    addMessage(msg) {
+        const list = this._get('logistica_messages');
+        list.push({ id: Date.now(), createdAt: new Date().toISOString(), ...msg });
+        this._set('logistica_messages', list);
+    },
+
+    // ── SEED DEMO DATA ───────────────────────────
+    _seedDemoData() {
+        if (localStorage.getItem('logistica_seeded')) return;
+
+        const carriers = [
+            { id: 'carrier_1', name: 'TransRapido Express', cnpj: '12.345.678/0001-01', phone: '(11) 3456-7890', address: 'Av. Paulista, 1000 - São Paulo/SP', email: 'contato@transrapido.com', status: 'active', createdAt: '2025-01-15T10:00:00Z' },
+            { id: 'carrier_2', name: 'LogiMaster Transportes', cnpj: '98.765.432/0001-02', phone: '(21) 2345-6789', address: 'Rua do Porto, 500 - Rio de Janeiro/RJ', email: 'contato@logimaster.com', status: 'active', createdAt: '2025-02-20T10:00:00Z' },
+            { id: 'carrier_3', name: 'CargoVelocity BR', cnpj: '55.444.333/0001-03', phone: '(31) 3333-4444', address: 'Av. Amazonas, 2000 - Belo Horizonte/MG', email: 'contato@cargovelocity.com', status: 'active', createdAt: '2025-03-10T10:00:00Z' }
+        ];
+
+        const users = [
+            { id: 'sa_1', name: 'Guilherme', email: 'gs1178546@gmail.com', password: 'Menino0503', role: 'programador', createdAt: '2025-01-01T00:00:00Z' }
+        ];
+
+        const vehicles = [
+            { id: 'veh_1', plate: 'ABC-1234', type: 'Van', model: 'Fiat Ducato', year: 2023, capacity: '1.5 ton', carrierId: 'carrier_1', status: 'active' },
+            { id: 'veh_2', plate: 'DEF-5678', type: 'Caminhão', model: 'VW Delivery 11.180', year: 2022, capacity: '6 ton', carrierId: 'carrier_1', status: 'active' },
+            { id: 'veh_3', plate: 'GHI-9012', type: 'Van', model: 'Mercedes Sprinter', year: 2024, capacity: '2 ton', carrierId: 'carrier_2', status: 'active' },
+            { id: 'veh_4', plate: 'JKL-3456', type: 'Caminhão', model: 'Volvo FH 540', year: 2023, capacity: '25 ton', carrierId: 'carrier_2', status: 'maintenance' },
+            { id: 'veh_5', plate: 'MNO-7890', type: 'Truck', model: 'Scania R450', year: 2024, capacity: '15 ton', carrierId: 'carrier_3', status: 'active' }
+        ];
+
+        const now = new Date();
+        const deliveries = [];
+        const statuses = ['pending', 'in_transit', 'delivered', 'cancelled'];
+        const cities = ['São Paulo', 'Rio de Janeiro', 'Belo Horizonte', 'Curitiba', 'Salvador', 'Fortaleza', 'Brasília', 'Porto Alegre', 'Manaus', 'Recife'];
+
+        // Generate deliveries for each carrier
+        [{ cid: 'carrier_1' }, { cid: 'carrier_2' }, { cid: 'carrier_3' }].forEach(({ cid }) => {
+            for (let i = 0; i < 15; i++) {
+                const daysAgo = Math.floor(Math.random() * 30);
+                const date = new Date(now - daysAgo * 86400000);
+                const status = statuses[Math.floor(Math.random() * statuses.length)];
+                const origin = cities[Math.floor(Math.random() * cities.length)];
+                let dest = cities[Math.floor(Math.random() * cities.length)];
+                while (dest === origin) dest = cities[Math.floor(Math.random() * cities.length)];
+                const weight = (Math.random() * 5000 + 100).toFixed(1);
+                const value = (Math.random() * 5000 + 200).toFixed(2);
+
+                deliveries.push({
+                    id: `del_${cid}_${i}`,
+                    carrierId: cid,
+                    trackingCode: `LT${Date.now().toString(36).toUpperCase()}${i}`,
+                    clientName: ['Empresa ABC', 'Loja Virtual XYZ', 'Distribuidora 123', 'Comércio Rápido', 'Marketplace BR'][Math.floor(Math.random() * 5)],
+                    clientPhone: `(11) 9${Math.floor(1000 + Math.random() * 9000)}-${Math.floor(1000 + Math.random() * 9000)}`,
+                    origin: origin,
+                    destination: dest,
+                    address: `Rua ${Math.floor(Math.random() * 900 + 100)}, nº ${Math.floor(Math.random() * 500)}`,
+                    weight: parseFloat(weight),
+                    value: parseFloat(value),
+                    status: status,
+                    notes: '',
+                    createdAt: date.toISOString(),
+                    updatedAt: date.toISOString()
+                });
+            }
+        });
+
+        this._set('logistica_carriers', carriers);
+        this._set('logistica_users', users);
+        this._set('logistica_vehicles', vehicles);
+        this._set('logistica_deliveries', deliveries);
+        this._set('logistica_notifications', []);
+        this._set('logistica_messages', []);
+        localStorage.setItem('logistica_seeded', 'true');
+    }
+};
+
+// Initialize on load
+DB.init();
+
+// Globais para Máscaras de Input
+window.maskCNPJ = function(input) {
+    let v = input.value.replace(/\D/g, "");
+    if (v.length > 14) v = v.slice(0, 14);
+    v = v.replace(/^(\d{2})(\d)/, "$1.$2");
+    v = v.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+    v = v.replace(/\.(\d{3})(\d)/, ".$1/$2");
+    v = v.replace(/(\d{4})(\d)/, "$1-$2");
+    input.value = v;
+};
+
+window.maskPhone = function(input) {
+    let v = input.value.replace(/\D/g, "");
+    if (v.length > 11) v = v.slice(0, 11);
+    v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+    v = v.replace(/(\d)(\d{4})$/, "$1-$2");
+    input.value = v;
+};

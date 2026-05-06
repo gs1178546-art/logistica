@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogiTrack - Gestão Logística Inteligente</title>
+    <meta name="description" content="Sistema de gestão logística multi-tenant para transportadoras. Gerencie entregas, motoristas, veículos e muito mais.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <i data-lucide="truck"></i>
+                <span>Logi<span class="logo-accent">Track</span></span>
+            </div>
+            <div class="nav-actions">
+                <a href="#features" class="btn-secondary btn-sm" style="text-decoration:none;">Funcionalidades</a>
+                <a href="login.html" class="btn-primary btn-sm" style="text-decoration:none;">Acessar Painel</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Gestão Logística<br><span>Inteligente & Segura</span></h1>
+                <p>Sistema multi-tenant completo para transportadoras. Cada empresa com seus próprios dados e veículos — tudo isolado e seguro.</p>
+                
+                <div class="glass" style="padding: 1.5rem; margin-bottom: 2rem; border-color: rgba(6,182,212,0.3);">
+                    <p style="font-size: 0.9rem; margin-bottom: 0.75rem; font-weight: 500;">Rastreie sua carga agora:</p>
+                    <div class="flex" style="gap: 0.5rem;">
+                        <input type="text" id="home-track-input" placeholder="Código de Rastreio (Ex: LT...)" style="flex: 1; padding: 0.7rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-input); color: var(--text);">
+                        <button class="btn-primary" onclick="window.location.href='tracking.html?code=' + document.getElementById('home-track-input').value.toUpperCase()">Rastrear</button>
+                    </div>
+                </div>
+
+                <div class="hero-actions">
+                    <a href="login.html" class="btn-primary" style="text-decoration:none;">
+                        <i data-lucide="log-in" style="width:18px;height:18px;"></i> Acessar Sistema
+                    </a>
+                    <a href="#features" class="btn-secondary" style="text-decoration:none;">
+                        <i data-lucide="arrow-down" style="width:18px;height:18px;"></i> Saiba Mais
+                    </a>
+                </div>
+                <div style="display:flex;gap:2rem;margin-top:3rem;">
+                    <div><div style="font-family:var(--font-heading);font-size:2rem;font-weight:700;color:var(--primary);">100%</div><div style="font-size:0.8rem;color:var(--text-dim);">Isolamento</div></div>
+                    <div><div style="font-family:var(--font-heading);font-size:2rem;font-weight:700;color:var(--accent);">2</div><div style="font-size:0.8rem;color:var(--text-dim);">Níveis de Acesso</div></div>
+                    <div><div style="font-family:var(--font-heading);font-size:2rem;font-weight:700;color:var(--success);">∞</div><div style="font-size:0.8rem;color:var(--text-dim);">Transportadoras</div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <h2>Tudo que sua transportadora precisa</h2>
+            <div class="features-grid">
+                <div class="feature-card glass">
+                    <i data-lucide="shield-check" style="width:40px;height:40px;"></i>
+                    <h3>Multi-Tenant Seguro</h3>
+                    <p>Cada transportadora acessa exclusivamente seus dados. Isolamento total entre empresas.</p>
+                </div>
+                <div class="feature-card glass">
+                    <i data-lucide="package" style="width:40px;height:40px;"></i>
+                    <h3>Gestão de Entregas</h3>
+                    <p>CRUD completo com rastreamento por código e fluxo de status.</p>
+                </div>
+                <div class="feature-card glass">
+                    <i data-lucide="users" style="width:40px;height:40px;"></i>
+                    <h3>Veículos</h3>
+                    <p>Gerencie veículos com placa, tipo e capacidade.</p>
+                </div>
+                <div class="feature-card glass">
+                    <i data-lucide="map" style="width:40px;height:40px;"></i>
+                    <h3>Mapa de Entregas</h3>
+                    <p>Visualize todas as entregas no mapa com marcadores coloridos por status.</p>
+                </div>
+                <div class="feature-card glass">
+                    <i data-lucide="bar-chart-3" style="width:40px;height:40px;"></i>
+                    <h3>Relatórios & Gráficos</h3>
+                    <p>Dashboard com métricas em tempo real, gráficos de desempenho e taxas de entrega.</p>
+                </div>
+                <div class="feature-card glass">
+                    <i data-lucide="calculator" style="width:40px;height:40px;"></i>
+                    <h3>Calculadora de Frete</h3>
+                    <p>Calcule fretes por distância, peso e tipo de carga com tabela de referência.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="padding:5rem 0;position:relative;z-index:1;">
+        <div class="container text-center">
+            <h2 style="font-family:var(--font-heading);font-size:2rem;margin-bottom:1rem;">Pronto para começar?</h2>
+            <p style="color:var(--text-dim);margin-bottom:2rem;max-width:500px;margin-left:auto;margin-right:auto;">Acesse o sistema com as contas de demonstração e explore todas as funcionalidades.</p>
+            <a href="login.html" class="btn-primary" style="text-decoration:none;font-size:1.1rem;padding:1rem 2.5rem;">
+                <i data-lucide="rocket" style="width:20px;height:20px;"></i> Acessar Agora
+            </a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 LogiTrack — Sistema de Gestão Logística Multi-Tenant</p>
+        </div>
+    </footer>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>

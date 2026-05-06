@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Motorista | LogiTrack</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .tracking-card {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .tracking-status {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        .status-off { color: var(--text-dim); }
+        .status-on { color: var(--success); }
+        .pulse-ring {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            border: 2px solid var(--success);
+            opacity: 0;
+            animation: none;
+            pointer-events: none;
+        }
+        .tracking-active .pulse-ring {
+            animation: pulse 2s infinite cubic-bezier(0.2, 0, 0, 1);
+        }
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+        }
+        .btn-track {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 30px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container flex-between">
+            <div class="logo">
+                <i data-lucide="truck"></i>
+                <span>Logi<span class="logo-accent">Track</span></span>
+            </div>
+            <div class="nav-actions">
+                <span id="nav-greeting" style="font-weight:500;font-size:0.9rem;"></span>
+                <button class="btn-secondary btn-sm" onclick="DB.logout()"><i data-lucide="log-out" style="width:16px;height:16px;"></i> Sair</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container" style="max-width: 600px; padding-top: 2rem;">
+        <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;text-align:center;">Painel do Motorista</h2>
+
+        <div class="glass tracking-card" id="tracking-container">
+            <div class="pulse-ring"></div>
+            <i data-lucide="map-pin" style="width:48px;height:48px;margin-bottom:1rem;color:var(--text-dim);" id="icon-pin"></i>
+            
+            <div class="tracking-status status-off" id="tracking-text">Rastreamento Desativado</div>
+            <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:2rem;">Ative o rastreamento para que a transportadora acompanhe sua localização em tempo real.</p>
+            
+            <button class="btn-primary btn-track" id="btn-toggle" onclick="toggleTracking()">
+                <i data-lucide="navigation"></i> Ativar Rastreamento GPS
+            </button>
+
+            <div id="location-display" style="margin-top:1.5rem;font-size:0.8rem;color:var(--info);display:none;">
+                Lat: <span id="lat-val">0</span> | Lng: <span id="lng-val">0</span>
+            </div>
+        </div>
+
+        <h3 style="font-family:var(--font-heading);margin-bottom:1rem;">Minhas Entregas</h3>
+        <div id="my-deliveries">
+            <!-- Injetado via JS -->
+        </div>
+    </main>
+
+    <script src="firebase-config.js"></script>
+    <script src="data.js"></script>
+    <script>
+        const USER = DB.getCurrentUser();
+        if (!USER || USER.role !== 'driver') {
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('nav-greeting').textContent = `Olá, ${USER.name.split(' ')[0]}`;
+
+        let watchId = null;
+        let isTracking = false;
+
+        function toggleTracking() {
+            if (isTracking) {
+                stopTracking();
+            } else {
+                startTracking();
+            }
+        }
+
+        function startTracking() {
+            if (!navigator.geolocation) {
+                alert("Geolocalização não é suportada pelo seu navegador.");
+                return;
+            }
+
+            document.getElementById('tracking-text').textContent = "Aguardando GPS...";
+            
+            watchId = navigator.geolocation.watchPosition(
+                (position) => {
+                    isTracking = true;
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    document.getElementById('tracking-container').classList.add('tracking-active');
+                    document.getElementById('tracking-text').textContent = "Rastreamento Ativo";
+                    document.getElementById('tracking-text').className = "tracking-status status-on";
+                    document.getElementById('icon-pin').style.color = "var(--success)";
+                    document.getElementById('btn-toggle').innerHTML = '<i data-lucide="square"></i> Parar Rastreamento';
+                    document.getElementById('btn-toggle').className = "btn-danger btn-track";
+                    document.getElementById('location-display').style.display = 'block';
+                    document.getElementById('lat-val').textContent = lat.toFixed(5);
+                    document.getElementById('lng-val').textContent = lng.toFixed(5);
+                    
+                    lucide.createIcons();
+
+                    // Salva a localização no banco de dados
+                    DB.updateUser(USER.id, { lat: lat, lng: lng });
+                },
+                (error) => {
+                    alert("Erro ao obter localização: " + error.message + "\nPor favor, ative o GPS e permita o acesso.");
+                    stopTracking();
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        }
+
+        function stopTracking() {
+            if (watchId !== null) {
+                navigator.geolocation.clearWatch(watchId);
+                watchId = null;
+            }
+            isTracking = false;
+            
+            document.getElementById('tracking-container').classList.remove('tracking-active');
+            document.getElementById('tracking-text').textContent = "Rastreamento Desativado";
+            document.getElementById('tracking-text').className = "tracking-status status-off";
+            document.getElementById('icon-pin').style.color = "var(--text-dim)";
+            document.getElementById('btn-toggle').innerHTML = '<i data-lucide="navigation"></i> Ativar Rastreamento GPS';
+            document.getElementById('btn-toggle').className = "btn-primary btn-track";
+            document.getElementById('location-display').style.display = 'none';
+            lucide.createIcons();
+            
+            // Limpa a localização no banco
+            DB.updateUser(USER.id, { lat: null, lng: null });
+        }
+
+        function renderMyDeliveries() {
+            const all = DB.getAllDeliveries();
+            const myDels = all.filter(d => d.driverId === USER.id);
+            const container = document.getElementById('my-deliveries');
+            
+            if (myDels.length === 0) {
+                container.innerHTML = '<div class="glass" style="padding:2rem;text-align:center;color:var(--text-dim);">Você não possui entregas atribuídas no momento.</div>';
+                return;
+            }
+
+            const STATUS_LABELS = { pending: 'Pendente', in_transit: 'Em Trânsito', delivered: 'Entregue', cancelled: 'Cancelado' };
+            const STATUS_COLORS = { pending: 'var(--warning)', in_transit: 'var(--info)', delivered: 'var(--success)', cancelled: 'var(--danger)' };
+
+            container.innerHTML = myDels.map(d => `
+                <div class="glass" style="padding:1.5rem;margin-bottom:1rem;">
+                    <div class="flex-between" style="margin-bottom:0.5rem;">
+                        <strong style="color:var(--primary);font-size:1.1rem;">${d.trackingCode}</strong>
+                        <span style="color:${STATUS_COLORS[d.status]};font-weight:600;font-size:0.85rem;">${STATUS_LABELS[d.status]}</span>
+                    </div>
+                    <div style="font-size:0.9rem;margin-bottom:0.5rem;"><strong>Cliente:</strong> ${d.clientName}</div>
+                    <div style="font-size:0.9rem;margin-bottom:0.5rem;"><strong>Rota:</strong> ${d.origin} <i data-lucide="arrow-right" style="width:14px;height:14px;display:inline;"></i> ${d.destination}</div>
+                    ${d.address ? `<div style="font-size:0.85rem;color:var(--text-dim);">📍 ${d.address}</div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        renderMyDeliveries();
+        lucide.createIcons();
+    </script>
+</body>
+</html>
