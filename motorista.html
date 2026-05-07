@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel do Motorista | LogiTrack</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=3">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         .tracking-card {
@@ -86,8 +86,8 @@
         </div>
     </main>
 
-    <script src="firebase-config.js"></script>
-    <script src="data.js"></script>
+    <script src="firebase-config.js?v=3"></script>
+    <script src="data.js?v=3"></script>
     <script>
         const USER = DB.getCurrentUser();
         if (!USER || USER.role !== 'driver') {
