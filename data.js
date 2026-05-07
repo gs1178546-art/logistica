@@ -137,6 +137,9 @@ const DB = {
         if (idx >= 0) { Object.assign(users[idx], updates); this.saveUsers(users); }
         return users[idx];
     },
+    deleteUser(id) {
+        this.saveUsers(this.getUsers().filter(u => u.id !== id));
+    },
 
     // ── SESSION ───────────────────────────────────
     setCurrentUser(user) {

@@ -181,8 +181,19 @@ function renderUsers() {
             <td><span class="badge ${u.role === 'programador' ? 'badge-cancelled' : u.role === 'admin' ? 'badge-transit' : 'badge-active'}">${roles[u.role] || u.role}</span></td>
             <td>${cMap[u.carrierId] || '—'}</td>
             <td>${new Date(u.createdAt).toLocaleDateString('pt-BR')}</td>
+            <td>
+                ${u.role === 'programador' ? '—' : `<button class="btn-danger btn-sm" onclick="deleteUserItem('${u.id}')" title="Excluir"><i data-lucide="trash-2" style="width:14px;height:14px;"></i></button>`}
+            </td>
         </tr>
     `).join('');
+    lucide.createIcons();
+}
+
+function deleteUserItem(id) {
+    if (!confirm('Tem certeza que deseja excluir este usuário permanentemente?')) return;
+    DB.deleteUser(id);
+    renderUsers();
+    showToast('Usuário excluído com sucesso.', 'error');
 }
 
 // ── Init ──────────────────────────────
