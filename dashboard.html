@@ -53,25 +53,54 @@
     <!-- Mobile Drawer -->
     <div class="drawer-overlay" id="drawer-overlay" onclick="toggleMobileMenu()"></div>
     <div class="mobile-drawer" id="mobile-drawer">
-        <a href="#" onclick="navTo('dashboard')"><i data-lucide="layout-dashboard" style="width:18px;height:18px;"></i> Dashboard</a>
+        <a href="#" onclick="navTo('dashboard')"><i data-lucide="layout-dashboard" style="width:18px;height:18px;"></i> Visão Geral</a>
+        <div class="side-section side-section-crm" style="padding:1rem 1rem 0.3rem;">🤝 CRM</div>
+        <a href="#" onclick="navTo('pipeline')"><i data-lucide="filter" style="width:18px;height:18px;"></i> Pipeline</a>
+        <a href="#" onclick="navTo('clients')"><i data-lucide="users" style="width:18px;height:18px;"></i> Clientes</a>
+        <a href="#" onclick="navTo('contracts')"><i data-lucide="file-text" style="width:18px;height:18px;"></i> Contratos</a>
+        <a href="#" onclick="navTo('pricing')"><i data-lucide="calculator" style="width:18px;height:18px;"></i> Precificação</a>
+        <div class="side-section side-section-planning" style="padding:1rem 1rem 0.3rem;">📋 PLANEJAMENTO</div>
+        <a href="#" onclick="navTo('demand')"><i data-lucide="trending-up" style="width:18px;height:18px;"></i> Demanda</a>
+        <a href="#" onclick="navTo('fleet')"><i data-lucide="truck" style="width:18px;height:18px;"></i> Frota</a>
+        <a href="#" onclick="navTo('capacity')"><i data-lucide="scale" style="width:18px;height:18px;"></i> Capacidade</a>
+        <div class="side-section side-section-ops" style="padding:1rem 1rem 0.3rem;">⚙️ OPERACIONAL</div>
+        <a href="#" onclick="navTo('collections')"><i data-lucide="package-check" style="width:18px;height:18px;"></i> Coletas</a>
         <a href="#" onclick="navTo('deliveries')"><i data-lucide="package" style="width:18px;height:18px;"></i> Entregas</a>
-        <a href="#" onclick="navTo('drivers')"><i data-lucide="users" style="width:18px;height:18px;"></i> Motoristas</a>
-        <a href="#" onclick="navTo('vehicles')"><i data-lucide="car" style="width:18px;height:18px;"></i> Veículos</a>
-        <a href="#" onclick="navTo('calculator')"><i data-lucide="calculator" style="width:18px;height:18px;"></i> Calculadora</a>
-        <a href="#" onclick="navTo('reports')"><i data-lucide="bar-chart-3" style="width:18px;height:18px;"></i> Relatórios</a>
-        <a href="#" onclick="navTo('settings')"><i data-lucide="settings" style="width:18px;height:18px;"></i> Configurações</a>
+        <a href="#" onclick="navTo('sla')"><i data-lucide="gauge" style="width:18px;height:18px;"></i> SLA</a>
+        <a href="#" onclick="navTo('costs')"><i data-lucide="wallet" style="width:18px;height:18px;"></i> Custos</a>
+        <a href="#" onclick="navTo('dre')"><i data-lucide="line-chart" style="width:18px;height:18px;"></i> DRE</a>
+        <a href="#" onclick="navTo('settings')"><i data-lucide="settings" style="width:18px;height:18px;"></i> Config</a>
         <a href="#" onclick="DB.logout()"><i data-lucide="log-out" style="width:18px;height:18px;"></i> Sair</a>
     </div>
 
     <main class="container admin-layout">
-        <aside class="sidebar glass">
+        <aside class="sidebar glass" style="overflow-y:auto;max-height:calc(100vh - 80px);">
             <ul class="side-nav">
-                <li><a href="#" data-tab="dashboard" class="active"><i data-lucide="layout-dashboard"></i> Dashboard</a></li>
+                <li><a href="#" data-tab="dashboard" class="active"><i data-lucide="layout-dashboard"></i> Visão Geral</a></li>
+                <li class="side-section side-section-crm">🤝 CRM</li>
+                <li><a href="#" data-tab="pipeline"><i data-lucide="filter"></i> Pipeline</a></li>
+                <li><a href="#" data-tab="clients"><i data-lucide="users"></i> Clientes</a></li>
+                <li><a href="#" data-tab="contracts"><i data-lucide="file-text"></i> Contratos</a></li>
+                <li><a href="#" data-tab="pricing"><i data-lucide="calculator"></i> Precificação</a></li>
+                <li><a href="#" data-tab="nps"><i data-lucide="star"></i> NPS</a></li>
+                <li class="side-section side-section-planning">📋 PLANEJAMENTO</li>
+                <li><a href="#" data-tab="demand"><i data-lucide="trending-up"></i> Demanda</a></li>
+                <li><a href="#" data-tab="fleet"><i data-lucide="truck"></i> Frota</a></li>
+                <li><a href="#" data-tab="routing"><i data-lucide="map"></i> Roteirização</a></li>
+                <li><a href="#" data-tab="capacity"><i data-lucide="scale"></i> Capacidade</a></li>
+                <li><a href="#" data-tab="simulation"><i data-lucide="flask-conical"></i> Simulações</a></li>
+                <li class="side-section side-section-ops">⚙️ OPERACIONAL</li>
+                <li><a href="#" data-tab="collections"><i data-lucide="package-check"></i> Coletas</a></li>
                 <li><a href="#" data-tab="deliveries"><i data-lucide="package"></i> Entregas</a></li>
-                <li><a href="#" data-tab="drivers"><i data-lucide="users"></i> Motoristas</a></li>
+                <li><a href="#" data-tab="drivers"><i data-lucide="user"></i> Motoristas</a></li>
                 <li><a href="#" data-tab="vehicles"><i data-lucide="car"></i> Veículos</a></li>
-                <li><a href="#" data-tab="calculator"><i data-lucide="calculator"></i> Calculadora</a></li>
-                <li><a href="#" data-tab="reports"><i data-lucide="bar-chart-3"></i> Relatórios</a></li>
+                <li><a href="#" data-tab="late"><i data-lucide="calendar-x"></i> Fora do Mês</a></li>
+                <li><a href="#" data-tab="occurrences"><i data-lucide="alert-triangle"></i> Avaria/Extravio</a></li>
+                <li><a href="#" data-tab="sla"><i data-lucide="gauge"></i> SLA</a></li>
+                <li><a href="#" data-tab="costs"><i data-lucide="wallet"></i> Custos</a></li>
+                <li><a href="#" data-tab="dre"><i data-lucide="line-chart"></i> DRE</a></li>
+                <li><a href="#" data-tab="kgkm"><i data-lucide="ruler"></i> Kg/Km</a></li>
+                <li class="side-section" style="opacity:0.4;">⚙️ SISTEMA</li>
                 <li><a href="#" data-tab="settings"><i data-lucide="settings"></i> Configurações</a></li>
             </ul>
         </aside>
@@ -142,22 +171,66 @@
                 </div>
             </div>
 
-            <!-- CALCULADORA DE FRETE -->
-            <div id="tab-calculator" class="tab-content">
-                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Calculadora de Frete</h2>
+            <!-- CRM: PIPELINE -->
+            <div id="tab-pipeline" class="tab-content">
+                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Pipeline de Vendas</h2>
+                <div class="stats-row">
+                    <div class="stat-card glass"><h4>Leads</h4><div class="value" id="p-leads" style="color:var(--text-dim);">0</div></div>
+                    <div class="stat-card glass"><h4>Propostas</h4><div class="value" id="p-proposals" style="color:var(--info);">0</div></div>
+                    <div class="stat-card glass"><h4>Negociação</h4><div class="value" id="p-negotiation" style="color:var(--warning);">0</div></div>
+                    <div class="stat-card glass"><h4>Contratos</h4><div class="value" id="p-won" style="color:var(--success);">0</div></div>
+                </div>
+                <div class="glass" style="padding:1.5rem;overflow-x:auto;">
+                    <div class="kanban-board" id="kanban-board"></div>
+                </div>
+            </div>
+
+            <!-- CRM: CLIENTES -->
+            <div id="tab-clients" class="tab-content">
+                <div class="flex-between mb-3">
+                    <h2 style="font-family:var(--font-heading);">Clientes</h2>
+                    <button class="btn-primary" onclick="openClientModal()"><i data-lucide="plus" style="width:16px;height:16px;"></i> Novo Cliente</button>
+                </div>
+                <div class="glass" style="padding:1.5rem;overflow-x:auto;">
+                    <table class="data-table"><thead><tr><th>Empresa</th><th>CNPJ</th><th>Contato</th><th>SLA</th><th>Status</th><th>Ações</th></tr></thead>
+                    <tbody id="clients-tbody"><tr><td colspan="6" class="empty-state">Nenhum cliente.</td></tr></tbody></table>
+                </div>
+            </div>
+
+            <!-- CRM: CONTRATOS -->
+            <div id="tab-contracts" class="tab-content">
+                <div class="flex-between mb-3">
+                    <h2 style="font-family:var(--font-heading);">Contratos</h2>
+                    <button class="btn-primary" onclick="openContractModal()"><i data-lucide="plus" style="width:16px;height:16px;"></i> Novo Contrato</button>
+                </div>
+                <div class="glass" style="padding:1.5rem;overflow-x:auto;">
+                    <table class="data-table"><thead><tr><th>Cliente</th><th>Vigência</th><th>SLA</th><th>Valor Mensal</th><th>Status</th><th>Ações</th></tr></thead>
+                    <tbody id="contracts-tbody"><tr><td colspan="6" class="empty-state">Nenhum contrato.</td></tr></tbody></table>
+                </div>
+            </div>
+
+            <!-- CRM: PRECIFICAÇÃO -->
+            <div id="tab-pricing" class="tab-content">
+                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Precificação Dinâmica</h2>
                 <div class="settings-grid">
                     <div class="setting-card glass">
-                        <h4><i data-lucide="calculator" style="width:18px;height:18px;"></i> Calcular Frete</h4>
-                        <div class="form-group"><label>Distância (km)</label><input type="number" id="calc-distance" placeholder="Ex: 500" min="1"></div>
-                        <div class="form-group"><label>Peso (kg)</label><input type="number" id="calc-weight" placeholder="Ex: 1000" min="1"></div>
-                        <div class="form-group"><label>Tipo de Carga</label>
-                            <select id="calc-type"><option value="normal">Normal</option><option value="fragile">Frágil (+30%)</option><option value="perishable">Perecível (+50%)</option><option value="dangerous">Perigosa (+80%)</option></select>
+                        <h4><i data-lucide="calculator" style="width:18px;height:18px;"></i> Simulador de Proposta</h4>
+                        <div class="form-group"><label>Cliente</label><select id="price-client"><option value="">Selecionar...</option></select></div>
+                        <div class="form-row">
+                            <div class="form-group"><label>Rota (km)</label><input type="number" id="price-dist" placeholder="500" min="1"></div>
+                            <div class="form-group"><label>Peso (kg)</label><input type="number" id="price-weight" placeholder="1000" min="1"></div>
                         </div>
-                        <button class="btn-primary full-width" onclick="calcFreight()"><i data-lucide="calculator" style="width:16px;height:16px;"></i> Calcular</button>
-                        <div class="calc-result" id="calc-result" style="display:none;">
-                            <p style="color:var(--text-dim);font-size:0.85rem;">Valor estimado do frete:</p>
-                            <div class="total" id="calc-total">R$ 0,00</div>
-                            <p style="color:var(--text-dim);font-size:0.75rem;margin-top:0.5rem;" id="calc-breakdown"></p>
+                        <div class="form-row">
+                            <div class="form-group"><label>Volume (m³)</label><input type="number" id="price-vol" placeholder="10" min="0" step="0.1"></div>
+                            <div class="form-group"><label>Modalidade</label>
+                                <select id="price-mode"><option value="normal">Normal</option><option value="fragile">Frágil (+30%)</option><option value="perishable">Perecível (+50%)</option><option value="dangerous">Perigosa (+80%)</option></select>
+                            </div>
+                        </div>
+                        <button class="btn-primary full-width" onclick="calcPricing()"><i data-lucide="calculator" style="width:16px;height:16px;"></i> Simular</button>
+                        <div class="calc-result" id="price-result" style="display:none;">
+                            <p style="color:var(--text-dim);font-size:0.85rem;">Valor estimado:</p>
+                            <div class="total" id="price-total">R$ 0,00</div>
+                            <p style="color:var(--text-dim);font-size:0.75rem;margin-top:0.5rem;" id="price-breakdown"></p>
                         </div>
                     </div>
                     <div class="setting-card glass">
@@ -171,24 +244,221 @@
                                 <tr><td>1001+</td><td>R$ 1,80</td></tr>
                             </tbody>
                         </table>
-                        <p style="color:var(--text-dim);font-size:0.75rem;margin-top:1rem;">Taxa por peso: R$ 0,15/kg<br>Pedágio estimado: R$ 0,12/km</p>
+                        <p style="color:var(--text-dim);font-size:0.75rem;margin-top:1rem;">Taxa peso: R$0,15/kg | Volume: R$12/m³ | Pedágio: R$0,12/km</p>
                     </div>
                 </div>
             </div>
 
-            <!-- RELATÓRIOS -->
-            <div id="tab-reports" class="tab-content">
-                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Relatórios</h2>
+            <!-- CRM: NPS -->
+            <div id="tab-nps" class="tab-content">
+                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">NPS & Satisfação</h2>
                 <div class="stats-row">
-                    <div class="stat-card glass"><h4>Taxa de Entrega</h4><div class="value" id="r-rate" style="color:var(--success);">0%</div></div>
-                    <div class="stat-card glass"><h4>Valor Total</h4><div class="value" id="r-value" style="color:var(--primary);font-size:1.4rem;">R$ 0</div></div>
-                    <div class="stat-card glass"><h4>Peso Total</h4><div class="value" id="r-weight" style="color:var(--accent);">0 kg</div></div>
+                    <div class="stat-card glass"><h4>NPS Score</h4><div class="value" id="nps-score" style="color:var(--success);">0</div></div>
+                    <div class="stat-card glass"><h4>Promotores</h4><div class="value" id="nps-promoters" style="color:var(--success);">0</div></div>
+                    <div class="stat-card glass"><h4>Detratores</h4><div class="value" id="nps-detractors" style="color:var(--danger);">0</div></div>
+                    <div class="stat-card glass"><h4>Respostas</h4><div class="value" id="nps-total" style="color:var(--info);">0</div></div>
+                </div>
+                <div class="glass"><div class="chart-wrapper"><canvas id="chart-nps"></canvas></div></div>
+            </div>
+
+            <!-- PLANNING: DEMANDA -->
+            <div id="tab-demand" class="tab-content">
+                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Previsão de Demanda</h2>
+                <div class="stats-row">
+                    <div class="stat-card glass"><h4>Volume Previsto (mês)</h4><div class="value" id="dem-vol" style="color:var(--planning);">0 kg</div></div>
+                    <div class="stat-card glass"><h4>Entregas Previstas</h4><div class="value" id="dem-del" style="color:var(--info);">0</div></div>
+                    <div class="stat-card glass"><h4>Crescimento</h4><div class="value" id="dem-growth" style="color:var(--success);">0%</div></div>
                 </div>
                 <div class="charts-grid">
-                    <div class="glass"><div class="chart-wrapper"><canvas id="chart-monthly"></canvas></div></div>
-                    <div class="glass"><div class="chart-wrapper"><canvas id="chart-drivers"></canvas></div></div>
+                    <div class="glass"><div class="chart-wrapper"><canvas id="chart-demand"></canvas></div></div>
+                    <div class="glass"><div class="chart-wrapper"><canvas id="chart-seasonality"></canvas></div></div>
                 </div>
             </div>
+
+            <!-- PLANNING: FROTA -->
+            <div id="tab-fleet" class="tab-content">
+                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Dimensionamento de Frota</h2>
+                <div class="stats-row">
+                    <div class="stat-card glass"><h4>Veículos Ativos</h4><div class="value" id="fl-active" style="color:var(--success);">0</div></div>
+                    <div class="stat-card glass"><h4>Em Manutenção</h4><div class="value" id="fl-maint" style="color:var(--warning);">0</div></div>
+                    <div class="stat-card glass"><h4>Ocupação Média</h4><div class="value" id="fl-occ" style="color:var(--planning);">0%</div></div>
+                    <div class="stat-card glass"><h4>Necessidade Extra</h4><div class="value" id="fl-extra" style="color:var(--danger);">0</div></div>
+                </div>
+                <div class="glass"><div class="chart-wrapper"><canvas id="chart-fleet"></canvas></div></div>
+            </div>
+
+            <!-- PLANNING: ROTEIRIZAÇÃO -->
+            <div id="tab-routing" class="tab-content">
+                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Roteirização Estratégica</h2>
+                <div class="glass" style="padding:1.5rem;">
+                    <h3 style="font-family:var(--font-heading);margin-bottom:1rem;">Mapa de Rotas</h3>
+                    <div class="map-container" id="routing-map"></div>
+                </div>
+                <div class="glass" style="padding:1.5rem;margin-top:1.5rem;overflow-x:auto;">
+                    <table class="data-table"><thead><tr><th>Rota</th><th>Distância</th><th>Entregas</th><th>Custo/km</th><th>Frequência</th></tr></thead>
+                    <tbody id="routes-tbody"></tbody></table>
+                </div>
+            </div>
+
+            <!-- PLANNING: CAPACIDADE -->
+            <div id="tab-capacity" class="tab-content">
+                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Gestão de Capacidade</h2>
+                <div class="stats-row">
+                    <div class="stat-card glass"><h4>Capacidade Total</h4><div class="value" id="cap-total" style="color:var(--primary);">0 ton</div></div>
+                    <div class="stat-card glass"><h4>Contratado</h4><div class="value" id="cap-contracted" style="color:var(--info);">0 ton</div></div>
+                    <div class="stat-card glass"><h4>Disponível</h4><div class="value" id="cap-available" style="color:var(--success);">0 ton</div></div>
+                </div>
+                <div class="glass"><div class="chart-wrapper"><canvas id="chart-capacity"></canvas></div></div>
+            </div>
+
+            <!-- PLANNING: SIMULAÇÕES -->
+            <div id="tab-simulation" class="tab-content">
+                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Simulações de Cenário</h2>
+                <div class="settings-grid">
+                    <div class="setting-card glass">
+                        <h4><i data-lucide="flask-conical" style="width:18px;height:18px;"></i> Simulador "E se..."</h4>
+                        <div class="form-group"><label>Cenário</label>
+                            <select id="sim-scenario"><option value="new_client">Novo cliente (+volume)</option><option value="new_route">Nova rota</option><option value="cut_cost">Corte de custos (-20%)</option><option value="add_vehicle">Adicionar veículo</option></select>
+                        </div>
+                        <div class="form-group"><label>Volume adicional (kg)</label><input type="number" id="sim-volume" placeholder="5000"></div>
+                        <div class="form-group"><label>Distância (km)</label><input type="number" id="sim-dist" placeholder="300"></div>
+                        <button class="btn-primary full-width" onclick="runSimulation()"><i data-lucide="play" style="width:16px;height:16px;"></i> Simular</button>
+                        <div id="sim-result" style="display:none;margin-top:1rem;" class="calc-result"></div>
+                    </div>
+                    <div class="setting-card glass">
+                        <h4><i data-lucide="bar-chart-3" style="width:18px;height:18px;"></i> Impacto Projetado</h4>
+                        <div class="chart-wrapper"><canvas id="chart-simulation"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OPS: COLETAS -->
+            <div id="tab-collections" class="tab-content">
+                <div class="flex-between mb-3">
+                    <h2 style="font-family:var(--font-heading);">Coletas</h2>
+                    <button class="btn-primary" onclick="openCollectionModal()"><i data-lucide="plus" style="width:16px;height:16px;"></i> Nova Coleta</button>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-card glass"><h4>Realizadas Hoje</h4><div class="value" id="col-done" style="color:var(--success);">0</div></div>
+                    <div class="stat-card glass"><h4>Não Realizadas</h4><div class="value" id="col-fail" style="color:var(--danger);">0</div></div>
+                    <div class="stat-card glass"><h4>Taxa Sucesso</h4><div class="value" id="col-rate" style="color:var(--primary);">0%</div></div>
+                    <div class="stat-card glass"><h4>Peso Coletado</h4><div class="value" id="col-weight" style="color:var(--info);">0 kg</div></div>
+                </div>
+                <div class="glass" style="padding:1.5rem;overflow-x:auto;">
+                    <table class="data-table"><thead><tr><th>Data</th><th>Cliente</th><th>Motorista</th><th>Volumes</th><th>Peso</th><th>Status</th><th>Motivo</th></tr></thead>
+                    <tbody id="collections-tbody"></tbody></table>
+                </div>
+            </div>
+
+            <!-- OPS: FORA DO MÊS -->
+            <div id="tab-late" class="tab-content">
+                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Baixas Fora do Mês</h2>
+                <div class="stats-row">
+                    <div class="stat-card glass"><h4>Backlog Total</h4><div class="value" id="late-total" style="color:var(--danger);">0</div></div>
+                    <div class="stat-card glass"><h4>Impacto SLA</h4><div class="value" id="late-impact" style="color:var(--warning);">0%</div></div>
+                </div>
+                <div class="glass" style="padding:1.5rem;overflow-x:auto;">
+                    <table class="data-table"><thead><tr><th>Código</th><th>Cliente</th><th>Expedição</th><th>Baixa</th><th>Dias Atraso</th><th>Motivo</th></tr></thead>
+                    <tbody id="late-tbody"></tbody></table>
+                </div>
+            </div>
+
+            <!-- OPS: AVARIA/EXTRAVIO -->
+            <div id="tab-occurrences" class="tab-content">
+                <div class="flex-between mb-3">
+                    <h2 style="font-family:var(--font-heading);">Avaria & Extravio</h2>
+                    <button class="btn-primary" onclick="openOccurrenceModal()"><i data-lucide="plus" style="width:16px;height:16px;"></i> Registrar</button>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-card glass"><h4>% Avaria</h4><div class="value" id="occ-damage" style="color:var(--warning);">0%</div></div>
+                    <div class="stat-card glass"><h4>% Extravio</h4><div class="value" id="occ-lost" style="color:var(--danger);">0%</div></div>
+                    <div class="stat-card glass"><h4>Custo Indenização</h4><div class="value" id="occ-cost" style="color:var(--danger);font-size:1.4rem;">R$ 0</div></div>
+                </div>
+                <div class="glass" style="padding:1.5rem;overflow-x:auto;">
+                    <table class="data-table"><thead><tr><th>Data</th><th>Código</th><th>Tipo</th><th>Rota</th><th>Motorista</th><th>Valor</th><th>Status</th></tr></thead>
+                    <tbody id="occurrences-tbody"></tbody></table>
+                </div>
+            </div>
+
+            <!-- OPS: SLA -->
+            <div id="tab-sla" class="tab-content">
+                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Nível de Serviço (SLA)</h2>
+                <div class="stats-row">
+                    <div class="stat-card glass"><h4>SLA Geral</h4><div class="value" id="sla-general" style="color:var(--success);">0%</div></div>
+                    <div class="stat-card glass"><h4>No Prazo</h4><div class="value" id="sla-ontime" style="color:var(--success);">0</div></div>
+                    <div class="stat-card glass"><h4>Atrasadas</h4><div class="value" id="sla-late" style="color:var(--danger);">0</div></div>
+                    <div class="stat-card glass"><h4>Em Risco</h4><div class="value" id="sla-risk" style="color:var(--warning);">0</div></div>
+                </div>
+                <div class="glass" style="padding:1.5rem;overflow-x:auto;">
+                    <h3 style="font-family:var(--font-heading);margin-bottom:1rem;">SLA por Cliente</h3>
+                    <table class="data-table"><thead><tr><th>Cliente</th><th>Contratado</th><th>Realizado</th><th>Semáforo</th><th>Tendência</th></tr></thead>
+                    <tbody id="sla-tbody"></tbody></table>
+                </div>
+                <div class="charts-grid" style="margin-top:1.5rem;">
+                    <div class="glass"><div class="chart-wrapper"><canvas id="chart-sla"></canvas></div></div>
+                    <div class="glass"><div class="chart-wrapper"><canvas id="chart-sla-trend"></canvas></div></div>
+                </div>
+            </div>
+
+            <!-- OPS: CUSTOS -->
+            <div id="tab-costs" class="tab-content">
+                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Custo Operacional</h2>
+                <div class="stats-row">
+                    <div class="stat-card glass"><h4>Custo Total</h4><div class="value" id="cost-total" style="color:var(--danger);font-size:1.4rem;">R$ 0</div></div>
+                    <div class="stat-card glass"><h4>Custo/kg</h4><div class="value" id="cost-kg" style="color:var(--warning);">R$ 0</div></div>
+                    <div class="stat-card glass"><h4>Custo/entrega</h4><div class="value" id="cost-del" style="color:var(--info);">R$ 0</div></div>
+                    <div class="stat-card glass"><h4>Custo/km</h4><div class="value" id="cost-km" style="color:var(--primary);">R$ 0</div></div>
+                </div>
+                <div class="settings-grid">
+                    <div class="setting-card glass">
+                        <h4>Composição de Custos</h4>
+                        <div id="cost-breakdown"></div>
+                    </div>
+                    <div class="setting-card glass">
+                        <h4>Orçado vs Realizado</h4>
+                        <div class="chart-wrapper"><canvas id="chart-costs"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OPS: DRE -->
+            <div id="tab-dre" class="tab-content">
+                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Resultado Operacional (DRE)</h2>
+                <div class="stats-row">
+                    <div class="stat-card glass"><h4>Receita Bruta</h4><div class="value" id="dre-revenue" style="color:var(--primary);font-size:1.4rem;">R$ 0</div></div>
+                    <div class="stat-card glass"><h4>Custos Totais</h4><div class="value" id="dre-costs" style="color:var(--danger);font-size:1.4rem;">R$ 0</div></div>
+                    <div class="stat-card glass"><h4>Margem Operacional</h4><div class="value" id="dre-margin" style="color:var(--success);">0%</div></div>
+                </div>
+                <div class="settings-grid">
+                    <div class="setting-card glass">
+                        <h4>DRE Simplificada</h4>
+                        <div id="dre-table"></div>
+                    </div>
+                    <div class="setting-card glass">
+                        <h4>Evolução Mensal</h4>
+                        <div class="chart-wrapper"><canvas id="chart-dre"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OPS: KG/KM -->
+            <div id="tab-kgkm" class="tab-content">
+                <h2 style="font-family:var(--font-heading);margin-bottom:1.5rem;">Demonstrativo Kg/Km</h2>
+                <div class="stats-row">
+                    <div class="stat-card glass"><h4>Kg/Km Geral</h4><div class="value" id="kgkm-general" style="color:var(--primary);">0</div></div>
+                    <div class="stat-card glass"><h4>Total Kg</h4><div class="value" id="kgkm-totalkg" style="color:var(--info);">0</div></div>
+                    <div class="stat-card glass"><h4>Total Km</h4><div class="value" id="kgkm-totalkm" style="color:var(--accent);">0</div></div>
+                </div>
+                <div class="charts-grid">
+                    <div class="glass"><div class="chart-wrapper"><canvas id="chart-kgkm"></canvas></div></div>
+                    <div class="glass" style="padding:1.5rem;overflow-x:auto;">
+                        <h4 style="margin-bottom:1rem;">Por Rota</h4>
+                        <table class="data-table"><thead><tr><th>Rota</th><th>Kg</th><th>Km</th><th>Kg/Km</th><th>Eficiência</th></tr></thead>
+                        <tbody id="kgkm-tbody"></tbody></table>
+                    </div>
+                </div>
+            </div>
+
 
             <!-- CONFIGURAÇÕES -->
             <div id="tab-settings" class="tab-content">

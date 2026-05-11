@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LogiTrack - Gestão Logística Inteligente</title>
-    <meta name="description" content="Sistema de gestão logística multi-tenant para transportadoras. Gerencie entregas, motoristas, veículos e muito mais.">
+    <title>LogiTrack - Ecossistema Logístico Integrado</title>
+    <meta name="description" content="Ecossistema digital unificado que conecta Comercial (CRM), Planejamento e Operacional em tempo real. Elimine silos e tome decisões baseadas em dados.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="style.css?v=5">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
     <div class="floating-orb orb-1"></div>
     <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
 
     <nav class="navbar">
         <div class="container">
@@ -22,7 +23,8 @@
                 <span>Logi<span class="logo-accent">Track</span></span>
             </div>
             <div class="nav-actions">
-                <a href="#features" class="btn-secondary btn-sm" style="text-decoration:none;">Funcionalidades</a>
+                <a href="#modules" class="btn-secondary btn-sm" style="text-decoration:none;">Módulos</a>
+                <a href="#integration" class="btn-secondary btn-sm" style="text-decoration:none;">Integração</a>
                 <a href="login.html" class="btn-primary btn-sm" style="text-decoration:none;">Acessar Painel</a>
             </div>
         </div>
@@ -32,9 +34,13 @@
     <section class="hero">
         <div class="container">
             <div class="hero-content">
-                <h1>Gestão Logística<br><span>Inteligente & Segura</span></h1>
-                <p>Sistema multi-tenant completo para transportadoras. Cada empresa com seus próprios dados e veículos — tudo isolado e seguro.</p>
-                
+                <div class="hero-badge">
+                    <i data-lucide="zap" style="width:14px;height:14px;"></i>
+                    Ecossistema Digital Unificado
+                </div>
+                <h1>Logística <br><span>Integrada & Inteligente</span></h1>
+                <p>Conecte Comercial, Planejamento e Operacional em tempo real. Elimine silos de informação e tome decisões baseadas em dados — tudo em uma única plataforma.</p>
+
                 <div class="glass" style="padding: 1.5rem; margin-bottom: 2rem; border-color: rgba(6,182,212,0.3);">
                     <p style="font-size: 0.9rem; margin-bottom: 0.75rem; font-weight: 500;">Rastreie sua carga agora:</p>
                     <div class="flex" style="gap: 0.5rem;">
@@ -47,73 +53,213 @@
                     <a href="login.html" class="btn-primary" style="text-decoration:none;">
                         <i data-lucide="log-in" style="width:18px;height:18px;"></i> Acessar Sistema
                     </a>
-                    <a href="#features" class="btn-secondary" style="text-decoration:none;">
-                        <i data-lucide="arrow-down" style="width:18px;height:18px;"></i> Saiba Mais
+                    <a href="#modules" class="btn-secondary" style="text-decoration:none;">
+                        <i data-lucide="arrow-down" style="width:18px;height:18px;"></i> Explorar Módulos
                     </a>
                 </div>
-                <div style="display:flex;gap:2rem;margin-top:3rem;">
-                    <div><div style="font-family:var(--font-heading);font-size:2rem;font-weight:700;color:var(--primary);">100%</div><div style="font-size:0.8rem;color:var(--text-dim);">Isolamento</div></div>
-                    <div><div style="font-family:var(--font-heading);font-size:2rem;font-weight:700;color:var(--accent);">2</div><div style="font-size:0.8rem;color:var(--text-dim);">Níveis de Acesso</div></div>
-                    <div><div style="font-family:var(--font-heading);font-size:2rem;font-weight:700;color:var(--success);">∞</div><div style="font-size:0.8rem;color:var(--text-dim);">Transportadoras</div></div>
+
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-value" style="color:var(--crm);">3</div>
+                        <div class="hero-stat-label">Módulos Integrados</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value" style="color:var(--planning);">360°</div>
+                        <div class="hero-stat-label">Visão Completa</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value" style="color:var(--operations);">∞</div>
+                        <div class="hero-stat-label">Tempo Real</div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Features -->
-    <section class="features-section" id="features">
+    <!-- Modules Section -->
+    <section class="modules-section" id="modules">
         <div class="container">
-            <h2>Tudo que sua transportadora precisa</h2>
-            <div class="features-grid">
-                <div class="feature-card glass">
-                    <i data-lucide="shield-check" style="width:40px;height:40px;"></i>
-                    <h3>Multi-Tenant Seguro</h3>
-                    <p>Cada transportadora acessa exclusivamente seus dados. Isolamento total entre empresas.</p>
-                </div>
-                <div class="feature-card glass">
-                    <i data-lucide="package" style="width:40px;height:40px;"></i>
-                    <h3>Gestão de Entregas</h3>
-                    <p>CRUD completo com rastreamento por código e fluxo de status.</p>
-                </div>
-                <div class="feature-card glass">
-                    <i data-lucide="users" style="width:40px;height:40px;"></i>
-                    <h3>Veículos</h3>
-                    <p>Gerencie veículos com placa, tipo e capacidade.</p>
-                </div>
-                <div class="feature-card glass">
-                    <i data-lucide="map" style="width:40px;height:40px;"></i>
-                    <h3>Mapa de Entregas</h3>
-                    <p>Visualize todas as entregas no mapa com marcadores coloridos por status.</p>
-                </div>
-                <div class="feature-card glass">
-                    <i data-lucide="bar-chart-3" style="width:40px;height:40px;"></i>
-                    <h3>Relatórios & Gráficos</h3>
-                    <p>Dashboard com métricas em tempo real, gráficos de desempenho e taxas de entrega.</p>
-                </div>
-                <div class="feature-card glass">
-                    <i data-lucide="calculator" style="width:40px;height:40px;"></i>
-                    <h3>Calculadora de Frete</h3>
-                    <p>Calcule fretes por distância, peso e tipo de carga com tabela de referência.</p>
+            <div class="section-header">
+                <h2>Três Módulos, Uma Plataforma</h2>
+                <p>Cada módulo alimenta o próximo — criando um fluxo contínuo da prospecção à entrega final.</p>
+            </div>
+
+            <div class="modules-grid">
+                <!-- CRM Module -->
+                <div class="module-card module-crm">
+                    <div class="module-icon">
+                        <i data-lucide="handshake" style="width:32px;height:32px;"></i>
+                    </div>
+                    <div class="module-label">Módulo CRM</div>
+                    <h3>Gestão Comercial</h3>
+                    <p>Rastreie o ciclo de vida completo do cliente, da prospecção à retenção.</p>
+                    <ul class="module-features">
+                        <li><i data-lucide="filter" style="width:14px;height:14px;"></i> Funil de Vendas (Pipeline)</li>
+                        <li><i data-lucide="users" style="width:14px;height:14px;"></i> Cadastro de Clientes & SLAs</li>
+                        <li><i data-lucide="file-text" style="width:14px;height:14px;"></i> Gestão de Contratos</li>
+                        <li><i data-lucide="calculator" style="width:14px;height:14px;"></i> Precificação Dinâmica</li>
+                        <li><i data-lucide="bar-chart" style="width:14px;height:14px;"></i> Pipeline & Previsão de Receita</li>
+                        <li><i data-lucide="bell" style="width:14px;height:14px;"></i> Alertas de Renovação</li>
+                        <li><i data-lucide="star" style="width:14px;height:14px;"></i> NPS & Pesquisa de Satisfação</li>
+                    </ul>
+                    <div class="module-kpi">
+                        <div><strong>Taxa de Conversão</strong><span>34%</span></div>
+                        <div><strong>Receita Prevista</strong><span>R$ 2.4M</span></div>
+                    </div>
                 </div>
 
+                <!-- Planning Module -->
+                <div class="module-card module-planning">
+                    <div class="module-icon">
+                        <i data-lucide="clipboard-list" style="width:32px;height:32px;"></i>
+                    </div>
+                    <div class="module-label">Módulo Planejamento</div>
+                    <h3>Capacidade Operacional</h3>
+                    <p>Traduz demanda comercial em capacidade operacional eficiente.</p>
+                    <ul class="module-features">
+                        <li><i data-lucide="trending-up" style="width:14px;height:14px;"></i> Previsão de Demanda</li>
+                        <li><i data-lucide="truck" style="width:14px;height:14px;"></i> Dimensionamento de Frota</li>
+                        <li><i data-lucide="map" style="width:14px;height:14px;"></i> Roteirização Estratégica</li>
+                        <li><i data-lucide="scale" style="width:14px;height:14px;"></i> Gestão de Capacidade</li>
+                        <li><i data-lucide="coins" style="width:14px;height:14px;"></i> Orçamento Operacional</li>
+                        <li><i data-lucide="calendar" style="width:14px;height:14px;"></i> Planejamento de Coletas</li>
+                        <li><i data-lucide="flask-conical" style="width:14px;height:14px;"></i> Simulações de Cenário</li>
+                    </ul>
+                    <div class="module-kpi">
+                        <div><strong>Ocupação da Frota</strong><span>87%</span></div>
+                        <div><strong>Custo/kg Projetado</strong><span>R$ 1.24</span></div>
+                    </div>
+                </div>
+
+                <!-- Operations Module -->
+                <div class="module-card module-operations">
+                    <div class="module-icon">
+                        <i data-lucide="settings" style="width:32px;height:32px;"></i>
+                    </div>
+                    <div class="module-label">Módulo Operacional</div>
+                    <h3>Execução em Tempo Real</h3>
+                    <p>Monitoramento e controle da operação logística em tempo real.</p>
+                    <ul class="module-features">
+                        <li><i data-lucide="package-check" style="width:14px;height:14px;"></i> Coletas Realizadas & Não Realizadas</li>
+                        <li><i data-lucide="check-circle" style="width:14px;height:14px;"></i> Baixas & Entregas</li>
+                        <li><i data-lucide="alert-triangle" style="width:14px;height:14px;"></i> Avaria & Extravio</li>
+                        <li><i data-lucide="gauge" style="width:14px;height:14px;"></i> Nível de Serviço (SLA)</li>
+                        <li><i data-lucide="wallet" style="width:14px;height:14px;"></i> Custo Operacional</li>
+                        <li><i data-lucide="line-chart" style="width:14px;height:14px;"></i> DRE Operacional</li>
+                        <li><i data-lucide="ruler" style="width:14px;height:14px;"></i> Demonstrativo Kg/Km</li>
+                    </ul>
+                    <div class="module-kpi">
+                        <div><strong>SLA Médio</strong><span>96.2%</span></div>
+                        <div><strong>Margem Operacional</strong><span>18.5%</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integration Flow -->
+    <section class="integration-section" id="integration">
+        <div class="container">
+            <div class="section-header">
+                <h2>Fluxo Integrado de Dados</h2>
+                <p>Os três módulos se alimentam mutuamente, criando um ciclo de melhoria contínua.</p>
+            </div>
+
+            <div class="integration-flow">
+                <div class="flow-node flow-crm">
+                    <div class="flow-icon"><i data-lucide="handshake" style="width:28px;height:28px;"></i></div>
+                    <h4>CRM</h4>
+                    <p>Clientes, contratos, demanda comercial</p>
+                </div>
+                <div class="flow-arrow">
+                    <i data-lucide="arrow-right" style="width:24px;height:24px;"></i>
+                    <span>Carteira de clientes e volumes</span>
+                </div>
+                <div class="flow-node flow-plan">
+                    <div class="flow-icon"><i data-lucide="clipboard-list" style="width:28px;height:28px;"></i></div>
+                    <h4>Planejamento</h4>
+                    <p>Rotas, frota, capacidade</p>
+                </div>
+                <div class="flow-arrow">
+                    <i data-lucide="arrow-right" style="width:24px;height:24px;"></i>
+                    <span>Plano operacional e metas</span>
+                </div>
+                <div class="flow-node flow-ops">
+                    <div class="flow-icon"><i data-lucide="settings" style="width:28px;height:28px;"></i></div>
+                    <h4>Operacional</h4>
+                    <p>Execução, SLA, custos, resultados</p>
+                </div>
+            </div>
+
+            <div class="flow-feedback">
+                <div class="flow-feedback-line"></div>
+                <div class="flow-feedback-text">
+                    <i data-lucide="refresh-cw" style="width:16px;height:16px;"></i>
+                    Feedback: SLA realizado, custos e resultados retornam ao CRM e Planejamento
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KPIs Section -->
+    <section class="kpis-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Indicadores em Tempo Real</h2>
+                <p>Todos os KPIs que sua operação precisa, consolidados em um único painel.</p>
+            </div>
+
+            <div class="kpis-grid">
+                <div class="kpi-card glass">
+                    <div class="kpi-icon" style="color:var(--crm);"><i data-lucide="user-plus" style="width:24px;height:24px;"></i></div>
+                    <div class="kpi-value">Taxa de Conversão</div>
+                    <div class="kpi-desc">Prospecção → Cliente ativo no funil de vendas</div>
+                </div>
+                <div class="kpi-card glass">
+                    <div class="kpi-icon" style="color:var(--planning);"><i data-lucide="truck" style="width:24px;height:24px;"></i></div>
+                    <div class="kpi-value">Ocupação da Frota</div>
+                    <div class="kpi-desc">% de utilização da capacidade planejada</div>
+                </div>
+                <div class="kpi-card glass">
+                    <div class="kpi-icon" style="color:var(--operations);"><i data-lucide="gauge" style="width:24px;height:24px;"></i></div>
+                    <div class="kpi-value">Nível de Serviço</div>
+                    <div class="kpi-desc">Entregas no prazo / Total × 100 com semáforo</div>
+                </div>
+                <div class="kpi-card glass">
+                    <div class="kpi-icon" style="color:var(--primary);"><i data-lucide="coins" style="width:24px;height:24px;"></i></div>
+                    <div class="kpi-value">Custo por Kg</div>
+                    <div class="kpi-desc">Apuração detalhada por rota, veículo e motorista</div>
+                </div>
+                <div class="kpi-card glass">
+                    <div class="kpi-icon" style="color:var(--success);"><i data-lucide="trending-up" style="width:24px;height:24px;"></i></div>
+                    <div class="kpi-value">Margem Operacional</div>
+                    <div class="kpi-desc">DRE simplificada: Receita − Custos = Margem</div>
+                </div>
+                <div class="kpi-card glass">
+                    <div class="kpi-icon" style="color:var(--accent);"><i data-lucide="ruler" style="width:24px;height:24px;"></i></div>
+                    <div class="kpi-value">Kg por Km</div>
+                    <div class="kpi-desc">Eficiência combinada de ocupação e distância</div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- CTA -->
-    <section style="padding:5rem 0;position:relative;z-index:1;">
+    <section class="cta-section">
         <div class="container text-center">
-            <h2 style="font-family:var(--font-heading);font-size:2rem;margin-bottom:1rem;">Pronto para começar?</h2>
-            <p style="color:var(--text-dim);margin-bottom:2rem;max-width:500px;margin-left:auto;margin-right:auto;">Acesse o sistema com as contas de demonstração e explore todas as funcionalidades.</p>
-            <a href="login.html" class="btn-primary" style="text-decoration:none;font-size:1.1rem;padding:1rem 2.5rem;">
-                <i data-lucide="rocket" style="width:20px;height:20px;"></i> Acessar Agora
-            </a>
+            <div class="cta-content glass">
+                <h2>Pronto para integrar sua operação?</h2>
+                <p>Acesse o sistema com a conta de demonstração e explore os 3 módulos completos.</p>
+                <a href="login.html" class="btn-primary" style="text-decoration:none;font-size:1.1rem;padding:1rem 2.5rem;">
+                    <i data-lucide="rocket" style="width:20px;height:20px;"></i> Acessar Agora
+                </a>
+            </div>
         </div>
     </section>
 
     <footer class="footer">
         <div class="container">
-            <p>© 2026 LogiTrack — Sistema de Gestão Logística Multi-Tenant</p>
+            <p>© 2026 LogiTrack — Ecossistema Logístico Integrado | CRM · Planejamento · Operacional</p>
         </div>
     </footer>
 
