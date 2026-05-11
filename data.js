@@ -338,6 +338,45 @@ const DB = {
         this._set('logistica_deliveries', deliveries);
         this._set('logistica_notifications', []);
         this._set('logistica_messages', []);
+
+        // Seed new modules
+        const stages=['prospect','proposal','negotiation','contract','active'];
+        const pipeline=[];
+        ['Tech Solutions','Varejo Express','FoodLog Brasil','AutoPeças SP','Farma Distribuidora','E-Commerce Total','Agro Norte','Indústria Metal'].forEach((n,i)=>{
+            pipeline.push({id:'pipe_'+i,name:n,stage:stages[i%5],value:Math.floor(Math.random()*50000+5000),contact:'(11) 9'+Math.floor(1000+Math.random()*9000)+'-'+Math.floor(1000+Math.random()*9000),carrierId:'carrier_1',createdAt:new Date(Date.now()-i*5*86400000).toISOString()});
+        });
+        this._set('logistica_pipeline',pipeline);
+
+        const clients=[];
+        ['Empresa ABC','Loja Virtual XYZ','Distribuidora 123','Comércio Rápido','Marketplace BR'].forEach((n,i)=>{
+            clients.push({id:'cli_'+i,name:n,cnpj:`${10+i}.${100+i}.${200+i}/0001-0${i}`,contact:'(11) 3456-'+Math.floor(1000+Math.random()*9000),sla:90+Math.floor(Math.random()*8),status:'Ativo',carrierId:'carrier_1',createdAt:new Date().toISOString()});
+        });
+        this._set('logistica_clients',clients);
+
+        const contracts=[];
+        clients.forEach((c,i)=>{
+            contracts.push({id:'ctr_'+i,clientId:c.id,clientName:c.name,sla:c.sla,value:Math.floor(Math.random()*20000+3000),startDate:new Date(Date.now()-180*86400000).toISOString(),endDate:new Date(Date.now()+(180-i*60)*86400000).toISOString(),carrierId:'carrier_1'});
+        });
+        this._set('logistica_contracts',contracts);
+
+        const collections=[];
+        for(let i=0;i<20;i++){
+            const done=Math.random()>0.2;
+            collections.push({id:'col_'+i,clientName:clients[i%clients.length].name,status:done?'done':'failed',weight:done?Math.floor(Math.random()*2000+100):0,volumes:done?Math.floor(Math.random()*30+1):0,reason:done?'':['Cliente fechado','Acesso negado','Cancelamento','Sem embalagem'][Math.floor(Math.random()*4)],driver:'Motorista '+(i%3+1),date:new Date(Date.now()-i*86400000).toISOString(),carrierId:'carrier_1'});
+        }
+        this._set('logistica_collections',collections);
+
+        const occurrences=[];
+        const occTypes=['avaria total','avaria parcial','extravio confirmado','extravio em apuração'];
+        for(let i=0;i<6;i++){
+            occurrences.push({id:'occ_'+i,type:occTypes[i%4],cost:Math.floor(Math.random()*3000+200),route:cities[i%cities.length]+'→'+cities[(i+3)%cities.length],driver:'Motorista '+(i%3+1),code:'LT'+Date.now().toString(36).toUpperCase()+i,status:i<3?'resolved':'pending',date:new Date(Date.now()-i*3*86400000).toISOString(),carrierId:'carrier_1'});
+        }
+        this._set('logistica_occurrences',occurrences);
+
+        const nps=[];
+        for(let i=0;i<25;i++){nps.push({id:'nps_'+i,score:Math.floor(Math.random()*10+1),client:clients[i%clients.length].name,date:new Date(Date.now()-i*2*86400000).toISOString(),carrierId:'carrier_1'});}
+        this._set('logistica_nps',nps);
+
         localStorage.setItem('logistica_seeded', 'true');
     }
 };

@@ -21,11 +21,26 @@ function navTo(tab) {
     const link = document.querySelector(`.side-nav a[data-tab="${tab}"]`);
     if (link) link.classList.add('active');
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-    document.getElementById('tab-' + tab).classList.add('active');
+    const el = document.getElementById('tab-' + tab);
+    if (el) el.classList.add('active');
     closeMobileMenu();
     lucide.createIcons();
     if (tab === 'dashboard') refreshDashboard();
-    if (tab === 'reports') refreshReports();
+    if (tab === 'pipeline' && typeof renderPipeline==='function') renderPipeline();
+    if (tab === 'clients' && typeof renderClients==='function') renderClients();
+    if (tab === 'contracts' && typeof renderContracts==='function') renderContracts();
+    if (tab === 'nps' && typeof renderNPS==='function') renderNPS();
+    if (tab === 'demand' && typeof renderDemand==='function') renderDemand();
+    if (tab === 'fleet' && typeof renderFleet==='function') renderFleet();
+    if (tab === 'routing' && typeof renderRouting==='function') renderRouting();
+    if (tab === 'capacity' && typeof renderCapacity==='function') renderCapacity();
+    if (tab === 'collections' && typeof renderCollections==='function') renderCollections();
+    if (tab === 'late' && typeof renderLateDeliveries==='function') renderLateDeliveries();
+    if (tab === 'occurrences' && typeof renderOccurrences==='function') renderOccurrences();
+    if (tab === 'sla' && typeof renderSLA==='function') renderSLA();
+    if (tab === 'costs' && typeof renderCosts==='function') renderCosts();
+    if (tab === 'dre' && typeof renderDRE==='function') renderDRE();
+    if (tab === 'kgkm' && typeof renderKgKm==='function') renderKgKm();
 }
 
 // ── Mobile Menu ───────────────────────
