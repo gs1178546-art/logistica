@@ -60,7 +60,7 @@
             const user = DB.getCurrentUser();
             if (user) {
                 if (user.role === 'programador') window.location.href = 'programador.html';
-                else if (user.role === 'admin') window.location.href = 'dashboard.html';
+                else if (['admin','comercial','gerente','planejamento'].includes(user.role)) window.location.href = 'dashboard.html';
                 else if (user.role === 'driver') window.location.href = 'motorista.html';
             }
         })();
@@ -93,7 +93,7 @@
             });
 
             if (user.role === 'programador') window.location.href = 'programador.html';
-            else if (user.role === 'admin') window.location.href = 'dashboard.html';
+            else if (['admin','comercial','gerente','planejamento'].includes(user.role)) window.location.href = 'dashboard.html';
             else if (user.role === 'driver') window.location.href = 'motorista.html';
         });
 

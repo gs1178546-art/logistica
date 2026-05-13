@@ -4,8 +4,10 @@
 
 // ── Auth Guard ────────────────────────
 const USER = DB.getCurrentUser();
-if (!USER || USER.role !== 'admin') { window.location.href = 'login.html'; }
+const ALLOWED_ROLES = ['admin','comercial','gerente','planejamento'];
+if (!USER || !ALLOWED_ROLES.includes(USER.role)) { window.location.href = 'login.html'; }
 const CID = USER.carrierId;
+const USER_ROLE = USER.role;
 document.getElementById('nav-greeting').textContent = `Olá, ${USER.name.split(' ')[0]}!`;
 
 // ── Sidebar Navigation ────────────────
@@ -41,6 +43,7 @@ function navTo(tab) {
     if (tab === 'costs' && typeof renderCosts==='function') renderCosts();
     if (tab === 'dre' && typeof renderDRE==='function') renderDRE();
     if (tab === 'kgkm' && typeof renderKgKm==='function') renderKgKm();
+    if (tab === 'crm-workflow' && typeof renderCrmWorkflow==='function') renderCrmWorkflow();
 }
 
 // ── Mobile Menu ───────────────────────

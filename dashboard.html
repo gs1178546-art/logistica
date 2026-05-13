@@ -83,6 +83,8 @@
                 <li><a href="#" data-tab="contracts"><i data-lucide="file-text"></i> Contratos</a></li>
                 <li><a href="#" data-tab="pricing"><i data-lucide="calculator"></i> Precificação</a></li>
                 <li><a href="#" data-tab="nps"><i data-lucide="star"></i> NPS</a></li>
+                <li class="side-section" style="color:#06b6d4;">📊 CRM AVANÇADO</li>
+                <li><a href="#" data-tab="crm-workflow"><i data-lucide="git-branch"></i> Workflow</a></li>
                 <li class="side-section side-section-planning">📋 PLANEJAMENTO</li>
                 <li><a href="#" data-tab="demand"><i data-lucide="trending-up"></i> Demanda</a></li>
                 <li><a href="#" data-tab="fleet"><i data-lucide="truck"></i> Frota</a></li>
@@ -459,6 +461,22 @@
                 </div>
             </div>
 
+            <!-- CRM AVANÇADO: WORKFLOW -->
+            <div id="tab-crm-workflow" class="tab-content">
+                <div class="flex-between mb-3">
+                    <h2 style="font-family:var(--font-heading);">Workflow de Aprovação</h2>
+                    <button class="btn-primary" onclick="openCrmDemandModal()"><i data-lucide="plus" style="width:16px;height:16px;"></i> Nova Demanda</button>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-card glass"><h4>Total Demandas</h4><div class="value" id="crm-wf-total" style="color:var(--primary);">0</div></div>
+                    <div class="stat-card glass"><h4>Em Triagem</h4><div class="value" id="crm-wf-triagem" style="color:#94a3b8;">0</div></div>
+                    <div class="stat-card glass"><h4>Aguardando Aprovação</h4><div class="value" id="crm-wf-aguardando" style="color:var(--warning);">0</div></div>
+                    <div class="stat-card glass"><h4>Concluídas</h4><div class="value" id="crm-wf-concluidas" style="color:var(--success);">0</div></div>
+                </div>
+                <div class="glass" style="padding:1rem;overflow-x:auto;">
+                    <div class="crm-wf-board" id="crm-workflow-board"></div>
+                </div>
+            </div>
 
             <!-- CONFIGURAÇÕES -->
             <div id="tab-settings" class="tab-content">
@@ -590,15 +608,61 @@
         </div>
     </div>
 
+    <!-- CRM Demand Modal -->
+    <div id="crm-demand-modal" class="modal-overlay">
+        <div class="modal-content glass">
+            <button class="close-modal" type="button" onclick="closeModal('crm-demand-modal')"><i data-lucide="x"></i></button>
+            <h3>Nova Demanda</h3>
+            <form id="crm-demand-form" onsubmit="saveCrmDemand(event)">
+                <div class="form-group"><label>Título da demanda</label><input type="text" id="crm-dem-title" required placeholder="Ex: Frete mensal Empresa XYZ"></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Cliente</label><select id="crm-dem-client" required><option value="">Selecionar...</option></select></div>
+                    <div class="form-group"><label>Valor (R$)</label><input type="number" id="crm-dem-value" step="0.01" min="0" placeholder="0.00"></div>
+                </div>
+                <div class="form-group"><label>Prioridade</label>
+                    <select id="crm-dem-priority">
+                        <option value="alta">Alta</option>
+                        <option value="media" selected>Média</option>
+                        <option value="baixa">Baixa</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Descrição</label><textarea id="crm-dem-desc" placeholder="Descreva os detalhes da demanda..."></textarea></div>
+                <button type="submit" class="btn-primary full-width">Criar Demanda</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- CRM Detail Drawer -->
+    <div id="crm-detail-drawer" class="crm-drawer-overlay" onclick="if(event.target===this)closeCrmDrawer()">
+        <div class="crm-detail-panel">
+            <div class="crm-detail-header">
+                <div>
+                    <h3 id="crm-detail-title">Demanda</h3>
+                    <div id="crm-detail-stage" style="margin-top:0.5rem;"></div>
+                </div>
+                <button class="crm-detail-close" onclick="closeCrmDrawer()"><i data-lucide="x" style="width:20px;height:20px;"></i></button>
+            </div>
+            <div class="crm-detail-body">
+                <div id="crm-detail-info"></div>
+                <div class="crm-timeline-section">
+                    <h4><i data-lucide="history" style="width:14px;height:14px;"></i> Histórico de Aprovações</h4>
+                    <div class="crm-timeline" id="crm-detail-timeline"></div>
+                </div>
+            </div>
+            <div id="crm-detail-actions"></div>
+        </div>
+    </div>
+
     <!-- Toast -->
     <div class="toast toast-success" id="toast"><i data-lucide="check-circle" style="width:20px;height:20px;"></i><span id="toast-text">Salvo!</span></div>
 
-    <script src="firebase-config.js?v=6"></script>
-    <script src="data.js?v=6"></script>
-    <script src="dashboard.js?v=6"></script>
-    <script src="modules-crm.js?v=6"></script>
-    <script src="modules-planning.js?v=6"></script>
-    <script src="modules-ops.js?v=6"></script>
+    <script src="firebase-config.js?v=7"></script>
+    <script src="data.js?v=7"></script>
+    <script src="dashboard.js?v=7"></script>
+    <script src="modules-crm.js?v=7"></script>
+    <script src="modules-crm-workflow.js?v=7"></script>
+    <script src="modules-planning.js?v=7"></script>
+    <script src="modules-ops.js?v=7"></script>
     <script>lucide.createIcons();</script>
 </body>
 </html>

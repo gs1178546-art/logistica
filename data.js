@@ -32,7 +32,7 @@ const DB = {
                 this._seedDemoData();
                 this._migrateRoles();
                 
-                const keys = ['logistica_users', 'logistica_carriers', 'logistica_deliveries', 'logistica_vehicles', 'logistica_notifications'];
+                const keys = ['logistica_users', 'logistica_carriers', 'logistica_deliveries', 'logistica_vehicles', 'logistica_notifications', 'logistica_crm_demands'];
                 const payload = {};
                 keys.forEach(k => { payload[k] = localStorage.getItem(k) || '[]'; });
                 window.dbFirestore.collection('database').doc('main').set(payload);
@@ -264,6 +264,42 @@ const DB = {
         this._set('logistica_notifications', list);
     },
 
+    // ── CRM DEMANDS (Workflow) ────────────────────
+    getCrmDemands(carrierId) {
+        const all = this._get('logistica_crm_demands');
+        if (!carrierId) return all;
+        return all.filter(d => d.carrierId === carrierId);
+    },
+    getCrmDemand(id) {
+        return this._get('logistica_crm_demands').find(d => d.id === id);
+    },
+    addCrmDemand(demand) {
+        const list = this._get('logistica_crm_demands');
+        list.push(demand);
+        this._set('logistica_crm_demands', list);
+        return demand;
+    },
+    updateCrmDemand(id, updates) {
+        const list = this._get('logistica_crm_demands');
+        const idx = list.findIndex(d => d.id === id);
+        if (idx >= 0) { Object.assign(list[idx], updates); this._set('logistica_crm_demands', list); }
+        return list[idx];
+    },
+    addCrmDemandLog(id, logEntry) {
+        const list = this._get('logistica_crm_demands');
+        const item = list.find(d => d.id === id);
+        if (item) {
+            if (!item.log) item.log = [];
+            item.log.push({ ...logEntry, at: new Date().toISOString() });
+            item.updatedAt = new Date().toISOString();
+            this._set('logistica_crm_demands', list);
+        }
+        return item;
+    },
+    deleteCrmDemand(id) {
+        this._set('logistica_crm_demands', this._get('logistica_crm_demands').filter(d => d.id !== id));
+    },
+
     // ── MESSAGES (Chat) ───────────────────────────
     getMessages(carrierId) {
         return this._get('logistica_messages').filter(m => m.carrierId === carrierId);
@@ -276,7 +312,10 @@ const DB = {
 
     // ── SEED DEMO DATA ───────────────────────────
     _seedDemoData() {
-        if (localStorage.getItem('logistica_seeded')) return;
+        const currentVersion = localStorage.getItem('logistica_seed_version') || '0';
+        if (localStorage.getItem('logistica_seeded') && currentVersion >= '2') return;
+        // Force re-seed if version is old (adds CRM workflow data)
+        if (currentVersion < '2') { localStorage.removeItem('logistica_seeded'); }
 
         const carriers = [
             { id: 'carrier_1', name: 'TransRapido Express', cnpj: '12.345.678/0001-01', phone: '(11) 3456-7890', address: 'Av. Paulista, 1000 - São Paulo/SP', email: 'contato@transrapido.com', status: 'active', createdAt: '2025-01-15T10:00:00Z' },
@@ -285,7 +324,10 @@ const DB = {
         ];
 
         const users = [
-            { id: 'sa_1', name: 'Guilherme', email: 'gs1178546@gmail.com', password: 'Menino0503', role: 'programador', createdAt: '2025-01-01T00:00:00Z' }
+            { id: 'sa_1', name: 'Guilherme', email: 'gs1178546@gmail.com', password: 'Menino0503', role: 'programador', createdAt: '2025-01-01T00:00:00Z' },
+            { id: 'crm_com_1', name: 'Ana Comercial', email: 'comercial@logitrack.com', password: 'Comercial123', role: 'comercial', carrierId: 'carrier_1', createdAt: '2025-01-10T00:00:00Z' },
+            { id: 'crm_ger_1', name: 'Carlos Gerente', email: 'gerente@logitrack.com', password: 'Gerente123', role: 'gerente', carrierId: 'carrier_1', createdAt: '2025-01-10T00:00:00Z' },
+            { id: 'crm_plan_1', name: 'Mariana Planejamento', email: 'planejamento@logitrack.com', password: 'Planejamento123', role: 'planejamento', carrierId: 'carrier_1', createdAt: '2025-01-10T00:00:00Z' }
         ];
 
         const vehicles = [
@@ -377,7 +419,39 @@ const DB = {
         for(let i=0;i<25;i++){nps.push({id:'nps_'+i,score:Math.floor(Math.random()*10+1),client:clients[i%clients.length].name,date:new Date(Date.now()-i*2*86400000).toISOString(),carrierId:'carrier_1'});}
         this._set('logistica_nps',nps);
 
+        // CRM Workflow Demands
+        const demandStages = ['triagem','validacao','planejamento','conferencia','aprovado','fechado','recusado'];
+        const demandTitles = [
+            {t:'Frete mensal Empresa ABC', c:'Empresa ABC', v:25000, p:'alta'},
+            {t:'Transporte refrigerado Loja XYZ', c:'Loja Virtual XYZ', v:18000, p:'alta'},
+            {t:'Distribuição regional Distribuidora 123', c:'Distribuidora 123', v:12000, p:'media'},
+            {t:'Rota expressa Comércio Rápido', c:'Comércio Rápido', v:8500, p:'media'},
+            {t:'Logística reversa Marketplace BR', c:'Marketplace BR', v:6000, p:'baixa'},
+            {t:'Cross-docking Tech Solutions', c:'Tech Solutions', v:32000, p:'alta'},
+            {t:'Carga fracionada Varejo Express', c:'Varejo Express', v:14000, p:'media'},
+            {t:'Transporte de insumos FoodLog', c:'FoodLog Brasil', v:9500, p:'baixa'}
+        ];
+        const crmDemands = demandTitles.map((d, i) => {
+            const stage = demandStages[i % demandStages.length];
+            const log = [{action:'Demanda criada', by:'Ana Comercial', role:'comercial', at:new Date(Date.now()-(8-i)*2*86400000).toISOString()}];
+            if(['validacao','planejamento','conferencia','aprovado','fechado'].includes(stage)) log.push({action:'Enviado para Gerente', by:'Ana Comercial', role:'comercial', at:new Date(Date.now()-(8-i)*2*86400000+3600000).toISOString()});
+            if(['planejamento','conferencia','aprovado','fechado'].includes(stage)) log.push({action:'Aprovado para Planejamento', by:'Carlos Gerente', role:'gerente', at:new Date(Date.now()-(8-i)*2*86400000+7200000).toISOString()});
+            if(['conferencia','aprovado','fechado'].includes(stage)) log.push({action:'Devolvido para Conferência', by:'Mariana Planejamento', role:'planejamento', at:new Date(Date.now()-(8-i)*2*86400000+10800000).toISOString()});
+            if(['aprovado','fechado'].includes(stage)) log.push({action:'Aprovação Final', by:'Carlos Gerente', role:'gerente', at:new Date(Date.now()-(8-i)*2*86400000+14400000).toISOString()});
+            if(stage==='fechado') log.push({action:'Liberado para cliente', by:'Ana Comercial', role:'comercial', at:new Date(Date.now()-(8-i)*2*86400000+18000000).toISOString()});
+            if(stage==='recusado') log.push({action:'Recusado pelo Gerente', by:'Carlos Gerente', role:'gerente', at:new Date(Date.now()-(8-i)*2*86400000+3600000).toISOString()});
+            return {
+                id:'dem_'+i, title:d.t, clientName:d.c, description:'Proposta de '+d.t.toLowerCase()+' com condições especiais.',
+                value:d.v, priority:d.p, stage:stage,
+                createdBy:'crm_com_1', createdByName:'Ana Comercial', createdByRole:'comercial',
+                carrierId:'carrier_1', createdAt:new Date(Date.now()-(8-i)*2*86400000).toISOString(),
+                updatedAt:new Date().toISOString(), log:log
+            };
+        });
+        this._set('logistica_crm_demands', crmDemands);
+
         localStorage.setItem('logistica_seeded', 'true');
+        localStorage.setItem('logistica_seed_version', '2');
     }
 };
 
