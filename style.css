@@ -247,7 +247,7 @@ a:hover { color: var(--accent); }
 
 /* ── Admin Layout ───────────────────── */
 .admin-layout {
-  display: grid; grid-template-columns: 250px 1fr;
+  display: grid; grid-template-columns: 250px minmax(0, 1fr);
   gap: 1.5rem; padding-top: 1.5rem; padding-bottom: 3rem;
   min-height: calc(100vh - 60px); position: relative; z-index: 1;
 }
@@ -271,6 +271,7 @@ a:hover { color: var(--accent); }
 .side-nav li a.active i { opacity: 1; filter: drop-shadow(0 0 4px rgba(34,211,238,0.4)); }
 
 /* ── Tab Content ────────────────────── */
+.content { min-width: 0; }
 .tab-content { display: none; animation: fadeSlide 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .tab-content.active { display: block; }
 
