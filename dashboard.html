@@ -559,6 +559,37 @@
         </div>
     </div>
 
+    <div id="client-modal" class="modal-overlay">
+        <div class="modal-content glass">
+            <button class="close-modal" type="button" onclick="closeModal('client-modal')"><i data-lucide="x"></i></button>
+            <h3>Novo Cliente</h3>
+            <form id="client-form" onsubmit="saveClient(event)">
+                <div class="form-group"><label>Nome da empresa</label><input type="text" id="cli-name" required placeholder="Nome da empresa"></div>
+                <div class="form-row">
+                    <div class="form-group"><label>CNPJ</label><input type="text" id="cli-cnpj" maxlength="18" oninput="maskCNPJ(this)" placeholder="00.000.000/0001-00"></div>
+                    <div class="form-group"><label>Contato (telefone)</label><input type="tel" id="cli-contact" maxlength="15" oninput="maskPhone(this)" placeholder="(00) 00000-0000"></div>
+                </div>
+                <div class="form-group"><label>SLA contratado (%)</label><input type="number" id="cli-sla" min="0" max="100" placeholder="95"></div>
+                <button type="submit" class="btn-primary full-width">Salvar Cliente</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="contract-modal" class="modal-overlay">
+        <div class="modal-content glass">
+            <button class="close-modal" type="button" onclick="closeModal('contract-modal')"><i data-lucide="x"></i></button>
+            <h3>Novo Contrato</h3>
+            <form id="contract-form" onsubmit="saveContract(event)">
+                <div class="form-group"><label>Nome do cliente</label><input type="text" id="ctr-clientName" required placeholder="Nome do cliente"></div>
+                <div class="form-row">
+                    <div class="form-group"><label>SLA (%)</label><input type="number" id="ctr-sla" min="0" max="100" placeholder="95"></div>
+                    <div class="form-group"><label>Valor mensal (R$)</label><input type="number" id="ctr-value" step="0.01" min="0" placeholder="0.00"></div>
+                </div>
+                <button type="submit" class="btn-primary full-width">Salvar Contrato</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Toast -->
     <div class="toast toast-success" id="toast"><i data-lucide="check-circle" style="width:20px;height:20px;"></i><span id="toast-text">Salvo!</span></div>
 

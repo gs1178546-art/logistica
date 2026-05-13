@@ -24,15 +24,24 @@ function renderClients(){
   lucide.createIcons();
 }
 function openClientModal(){
-  const name=prompt('Nome da empresa:');if(!name)return;
-  const cnpj=prompt('CNPJ:')||'';
-  const contact=prompt('Contato (telefone):')||'';
-  const sla=prompt('SLA contratado (%):')||'95';
-  DB._get('logistica_clients');
+  document.getElementById('client-form').reset();
+  document.getElementById('client-modal').classList.add('active');
+}
+
+window.saveClient = function(e){
+  e.preventDefault();
+  const name=document.getElementById('cli-name').value;
+  const cnpj=document.getElementById('cli-cnpj').value;
+  const contact=document.getElementById('cli-contact').value;
+  const sla=document.getElementById('cli-sla').value || '95';
+  
   const list=DB._get('logistica_clients');
   list.push({id:'cli_'+Date.now(),name,cnpj,contact,sla:parseInt(sla),status:'Ativo',carrierId:CID,createdAt:new Date().toISOString()});
   DB._set('logistica_clients',list);
-  renderClients();showToast('Cliente adicionado!');
+  
+  renderClients();
+  closeModal('client-modal');
+  showToast('Cliente adicionado!');
 }
 function deleteClient(id){
   if(!confirm('Excluir cliente?'))return;
@@ -52,15 +61,25 @@ function renderContracts(){
   }).join('');lucide.createIcons();
 }
 function openContractModal(){
-  const clientName=prompt('Nome do cliente:');if(!clientName)return;
-  const sla=prompt('SLA (%):')||'95';
-  const value=prompt('Valor mensal (R$):')||'0';
+  document.getElementById('contract-form').reset();
+  document.getElementById('contract-modal').classList.add('active');
+}
+
+window.saveContract = function(e){
+  e.preventDefault();
+  const clientName=document.getElementById('ctr-clientName').value;
+  const sla=document.getElementById('ctr-sla').value || '95';
+  const value=document.getElementById('ctr-value').value || '0';
+  
   const startDate=new Date().toISOString();
   const endDate=new Date(Date.now()+365*86400000).toISOString();
   const list=DB._get('logistica_contracts');
   list.push({id:'ctr_'+Date.now(),clientName,sla:parseInt(sla),value:parseFloat(value),startDate,endDate,carrierId:CID});
   DB._set('logistica_contracts',list);
-  renderContracts();showToast('Contrato adicionado!');
+  
+  renderContracts();
+  closeModal('contract-modal');
+  showToast('Contrato adicionado!');
 }
 function deleteContract(id){
   if(!confirm('Excluir contrato?'))return;
